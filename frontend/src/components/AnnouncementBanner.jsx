@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Megaphone, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, ChevronLeft, ChevronRight } from 'lucide-react';
 
 /**
  * AnnouncementBanner
  *
- * Reads `announcements` from content — a JSON array of objects:
+ * Image-first modal. Left/right arrows overlay the image.
+ * Title and description are only rendered when non-empty.
+ * Dismissed per-session via sessionStorage.
+ *
+ * Reads `announcements` JSON array from content:
  *   [{ title, text, image, enabled }, ...]
  *
- * Falls back to legacy flat keys (announcement_enabled / announcement_title /
- * announcement_text / announcement_image) so existing DB data still works.
- *
- * Shows one announcement at a time in a modal. If there are multiple active
- * announcements the user can page through them with Prev / Next arrows.
- * Dismissed per-session via sessionStorage.
+ * Falls back to legacy flat keys for backward compat.
  */
 const AnnouncementBanner = ({ content = {} }) => {
   const [visible, setVisible] = useState(false);
@@ -21,24 +20,23 @@ const AnnouncementBanner = ({ content = {} }) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(1);
 
-  /* ── Compute slide list ────────────────────────────────────────────── */
+  /* ── Build slide list ──────────────────────────────────────────────── */
   useEffect(() => {
     let parsed = [];
 
-    // Try JSON array key first
     if (content.announcements) {
       try {
         const arr = JSON.parse(content.announcements);
         if (Array.isArray(arr)) {
           parsed = arr.filter((a) => a.enabled !== false && a.enabled !== 'false');
         }
-      } catch (_) { /* fall through to legacy */ }
+      } catch (_) { /* fall through */ }
     }
 
-    // Legacy flat keys fallback
+    // Legacy flat-key fallback
     if (parsed.length === 0 && content.announcement_enabled === 'true') {
       parsed = [{
-        title: content.announcement_title || 'Announcement',
+        title: content.announcement_title || '',
         text:  content.announcement_text  || '',
         image: content.announcement_image || '',
       }];
@@ -53,14 +51,14 @@ const AnnouncementBanner = ({ content = {} }) => {
     }
   }, [content]);
 
-  /* ── Navigation helpers ────────────────────────────────────────────── */
+  /* ── Navigation ────────────────────────────────────────────────────── */
   const goTo = useCallback((next, dir) => {
     setDirection(dir);
     setIndex(next);
   }, []);
 
   const prev = () => goTo((index - 1 + slides.length) % slides.length, -1);
-  const next = () => goTo((index + 1) % slides.length,  1);
+  const next = useCallback(() => goTo((index + 1) % slides.length, 1), [index, slides.length, goTo]);
 
   const dismiss = () => {
     setVisible(false);
@@ -70,71 +68,75 @@ const AnnouncementBanner = ({ content = {} }) => {
   if (!visible || slides.length === 0) return null;
 
   const slide = slides[index];
+  const hasTitle = slide.title && slide.title.trim();
+  const hasText  = slide.text  && slide.text.trim();
+  const hasImage = slide.image && slide.image.trim();
+  const hasContent = hasTitle || hasText;
 
   const variants = {
-    enter:  (d) => ({ x: d > 0 ? 60 : -60, opacity: 0 }),
+    enter:  (d) => ({ x: d > 0 ? 80 : -80, opacity: 0 }),
     center: { x: 0, opacity: 1 },
-    exit:   (d) => ({ x: d > 0 ? -60 : 60, opacity: 0 }),
+    exit:   (d) => ({ x: d > 0 ? -80 : 80, opacity: 0 }),
   };
 
   return (
     <AnimatePresence>
       {visible && (
+        /* Overlay */
         <motion.div
-          key="announcement-overlay"
+          key="ann-overlay"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.25 }}
+          transition={{ duration: 0.22 }}
           onClick={dismiss}
           style={{
             position: 'fixed', inset: 0,
-            background: 'rgba(13,31,45,0.75)',
-            backdropFilter: 'blur(4px)',
+            background: 'rgba(10,22,35,0.8)',
+            backdropFilter: 'blur(5px)',
             zIndex: 2000,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            padding: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1.25rem',
           }}
         >
+          {/* Modal card */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 20 }}
+            initial={{ opacity: 0, scale: 0.9, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 20 }}
-            transition={{ type: 'spring', damping: 22, stiffness: 280 }}
+            exit={{ opacity: 0, scale: 0.9, y: 24 }}
+            transition={{ type: 'spring', damping: 24, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
             style={{
               background: 'white',
               borderRadius: '20px',
-              maxWidth: '520px',
               width: '100%',
+              maxWidth: '420px',
+              maxHeight: '90vh',
               overflow: 'hidden',
-              boxShadow: '0 32px 80px rgba(0,0,0,0.35)',
+              boxShadow: '0 40px 100px rgba(0,0,0,0.45)',
               position: 'relative',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            {/* Gold accent bar */}
-            <div style={{ height: '4px', background: 'linear-gradient(90deg, var(--primary), #e8c97a)' }} />
+            {/* Gold top bar */}
+            <div style={{
+              height: '3px',
+              background: 'linear-gradient(90deg, var(--primary), #e8c97a)',
+              flexShrink: 0,
+            }} />
 
-            {/* Close ✕ */}
-            <button
-              onClick={dismiss}
-              style={{
-                position: 'absolute', top: '1rem', right: '1rem',
-                width: '32px', height: '32px',
-                background: 'rgba(0,0,0,0.07)', border: 'none',
-                borderRadius: '50%', cursor: 'pointer',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                zIndex: 10, transition: 'background 0.2s',
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(0,0,0,0.15)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'rgba(0,0,0,0.07)')}
-              aria-label="Close announcement"
-            >
-              <X size={16} color="var(--secondary)" strokeWidth={2.5} />
-            </button>
-
-            {/* Slide content — AnimatePresence for swipe transitions */}
-            <div style={{ overflow: 'hidden' }}>
+            {/* ── Image area ─────────────────────────────────────── */}
+            <div style={{
+              position: 'relative',
+              flexShrink: 0,
+              background: '#0d1f2d',
+              /* Portrait images are ~2:3; landscape ~16:9. We use aspect-ratio
+                 so the image drives the height naturally. */
+              overflow: 'hidden',
+            }}>
               <AnimatePresence custom={direction} initial={false} mode="wait">
                 <motion.div
                   key={index}
@@ -143,126 +145,163 @@ const AnnouncementBanner = ({ content = {} }) => {
                   initial="enter"
                   animate="center"
                   exit="exit"
-                  transition={{ duration: 0.28, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+                  style={{ lineHeight: 0 }}
                 >
-                  {/* Image */}
-                  {slide.image && (
-                    <div style={{ height: '220px', overflow: 'hidden' }}>
-                      <img
-                        src={slide.image}
-                        alt={slide.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                      />
-                    </div>
+                  {hasImage ? (
+                    <img
+                      src={slide.image}
+                      alt={slide.title || 'Announcement'}
+                      style={{
+                        width: '100%',
+                        maxHeight: hasContent ? '55vh' : '80vh',
+                        objectFit: 'contain',
+                        objectPosition: 'center top',
+                        display: 'block',
+                        background: '#0d1f2d',
+                      }}
+                    />
+                  ) : (
+                    /* No image — small placeholder strip */
+                    <div style={{ height: '6px' }} />
                   )}
-
-                  {/* Text body */}
-                  <div style={{ padding: '2rem 2rem 1.5rem' }}>
-                    {/* Icon + Title row */}
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.85rem', marginBottom: '1rem' }}>
-                      <div style={{
-                        background: 'rgba(201,168,76,0.12)', borderRadius: '10px',
-                        width: '44px', height: '44px',
-                        display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                      }}>
-                        <Megaphone size={20} color="var(--primary)" strokeWidth={2} />
-                      </div>
-                      <h2 style={{
-                        fontFamily: 'Rajdhani, sans-serif',
-                        fontSize: '1.45rem',
-                        color: 'var(--secondary)',
-                        lineHeight: 1.15,
-                        marginTop: '0.2rem',
-                      }}>
-                        {slide.title || 'Announcement'}
-                      </h2>
-                    </div>
-
-                    {slide.text && (
-                      <p style={{
-                        color: 'var(--text-muted)',
-                        fontSize: '0.97rem',
-                        lineHeight: 1.7,
-                        marginBottom: '1.5rem',
-                      }}>
-                        {slide.text}
-                      </p>
-                    )}
-                  </div>
                 </motion.div>
               </AnimatePresence>
-            </div>
 
-            {/* Footer — pagination + dismiss */}
-            <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              padding: '0 2rem 1.75rem',
-              gap: '1rem',
-            }}>
-              {/* Prev / Next arrows (only if multiple) */}
-              {slides.length > 1 ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                  <button onClick={prev} aria-label="Previous" style={navBtn}>
-                    <ChevronLeft size={16} strokeWidth={2.5} />
+              {/* ── Prev / Next arrows (over image) ────────────── */}
+              {slides.length > 1 && hasImage && (
+                <>
+                  <button
+                    onClick={prev}
+                    aria-label="Previous announcement"
+                    style={arrowBtn('left')}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(13,31,45,0.75)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = arrowBtn('left').background)}
+                  >
+                    <ChevronLeft size={20} strokeWidth={2.5} color="white" />
                   </button>
-                  {/* Dot indicators */}
-                  <div style={{ display: 'flex', gap: '5px', alignItems: 'center' }}>
-                    {slides.map((_, i) => (
-                      <button
-                        key={i}
-                        onClick={() => goTo(i, i > index ? 1 : -1)}
-                        aria-label={`Announcement ${i + 1}`}
-                        style={{
-                          width: i === index ? '20px' : '8px',
-                          height: '8px',
-                          borderRadius: '4px',
-                          background: i === index ? 'var(--primary)' : 'rgba(13,31,45,0.2)',
-                          border: 'none', cursor: 'pointer', padding: 0,
-                          transition: 'all 0.3s ease',
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <button onClick={next} aria-label="Next" style={navBtn}>
-                    <ChevronRight size={16} strokeWidth={2.5} />
+                  <button
+                    onClick={next}
+                    aria-label="Next announcement"
+                    style={arrowBtn('right')}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'rgba(13,31,45,0.75)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = arrowBtn('right').background)}
+                  >
+                    <ChevronRight size={20} strokeWidth={2.5} color="white" />
                   </button>
-                </div>
-              ) : (
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-light)', fontFamily: 'Rajdhani, sans-serif' }}>
-                  Announcement
-                </span>
+                </>
               )}
 
-              <button
-                onClick={dismiss}
-                style={{
-                  padding: '0.7rem 1.6rem',
-                  background: 'var(--secondary)',
-                  color: 'var(--primary)',
-                  border: 'none', borderRadius: '10px',
-                  fontFamily: 'Rajdhani, sans-serif', fontWeight: 700,
-                  fontSize: '0.88rem', letterSpacing: '0.08em', textTransform: 'uppercase',
-                  cursor: 'pointer', transition: 'opacity 0.2s', flexShrink: 0,
-                }}
-                onMouseEnter={(e) => (e.target.style.opacity = '0.85')}
-                onMouseLeave={(e) => (e.target.style.opacity = '1')}
-              >
-                Got it
-              </button>
+              {/* Slide counter */}
+              {slides.length > 1 && (
+                <div style={{
+                  position: 'absolute', top: '0.75rem', left: '0.75rem',
+                  background: 'rgba(13,31,45,0.65)',
+                  color: 'rgba(255,255,255,0.85)',
+                  padding: '0.2rem 0.6rem',
+                  borderRadius: '20px',
+                  fontSize: '0.7rem',
+                  fontFamily: 'Rajdhani, sans-serif',
+                  fontWeight: 700,
+                  letterSpacing: '0.08em',
+                  backdropFilter: 'blur(4px)',
+                }}>
+                  {index + 1} / {slides.length}
+                </div>
+              )}
             </div>
 
-            {/* Slide counter badge */}
+            {/* ── Dot indicators (always visible when multiple) ── */}
             {slides.length > 1 && (
               <div style={{
-                position: 'absolute', top: '1rem', left: '1rem',
-                background: 'rgba(13,31,45,0.7)', color: 'rgba(255,255,255,0.8)',
-                padding: '0.2rem 0.6rem', borderRadius: '20px',
-                fontSize: '0.72rem', fontFamily: 'Rajdhani, sans-serif',
-                fontWeight: 700, letterSpacing: '0.08em',
+                display: 'flex', gap: '6px', justifyContent: 'center',
+                padding: hasContent ? '0.75rem 1.5rem 0' : '0.85rem 1.5rem',
+                flexShrink: 0,
               }}>
-                {index + 1} / {slides.length}
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => goTo(i, i > index ? 1 : -1)}
+                    aria-label={`Slide ${i + 1}`}
+                    style={{
+                      width: i === index ? '22px' : '8px',
+                      height: '8px',
+                      borderRadius: '4px',
+                      background: i === index ? 'var(--primary)' : 'rgba(13,31,45,0.18)',
+                      border: 'none', cursor: 'pointer', padding: 0,
+                      transition: 'all 0.3s ease',
+                    }}
+                  />
+                ))}
               </div>
             )}
+
+            {/* Prev / Next for no-image slides (inline row) */}
+            {slides.length > 1 && !hasImage && (
+              <div style={{
+                display: 'flex', justifyContent: 'center', gap: '0.6rem',
+                paddingTop: hasContent ? '0.5rem' : '0.75rem',
+              }}>
+                <button onClick={prev} style={inlineArrowBtn} aria-label="Previous">
+                  <ChevronLeft size={16} strokeWidth={2.5} />
+                </button>
+                <button onClick={next} style={inlineArrowBtn} aria-label="Next">
+                  <ChevronRight size={16} strokeWidth={2.5} />
+                </button>
+              </div>
+            )}
+
+            {/* ── Text content (only if non-empty) ───────────────── */}
+            {hasContent && (
+              <div style={{
+                padding: '1rem 1.5rem 1.5rem',
+                flexShrink: 0,
+                overflowY: 'auto',
+              }}>
+                {hasTitle && (
+                  <h2 style={{
+                    fontFamily: 'Rajdhani, sans-serif',
+                    fontSize: '1.3rem',
+                    fontWeight: 800,
+                    color: 'var(--secondary)',
+                    lineHeight: 1.15,
+                    marginBottom: hasText ? '0.5rem' : 0,
+                  }}>
+                    {slide.title}
+                  </h2>
+                )}
+                {hasText && (
+                  <p style={{
+                    color: 'var(--text-muted)',
+                    fontSize: '0.93rem',
+                    lineHeight: 1.65,
+                    margin: 0,
+                  }}>
+                    {slide.text}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* ── Close ✕ ────────────────────────────────────────── */}
+            <button
+              onClick={dismiss}
+              aria-label="Close announcement"
+              style={{
+                position: 'absolute', top: '0.7rem', right: '0.7rem',
+                width: '32px', height: '32px',
+                background: 'rgba(13,31,45,0.55)',
+                border: 'none', borderRadius: '50%', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                backdropFilter: 'blur(4px)',
+                transition: 'background 0.2s',
+                zIndex: 10,
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'rgba(13,31,45,0.85)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'rgba(13,31,45,0.55)')}
+            >
+              <X size={15} color="white" strokeWidth={2.5} />
+            </button>
           </motion.div>
         </motion.div>
       )}
@@ -270,13 +309,32 @@ const AnnouncementBanner = ({ content = {} }) => {
   );
 };
 
-const navBtn = {
-  width: '30px', height: '30px',
-  background: '#f0eee9', border: '1px solid #e0ddd6',
-  borderRadius: '50%', cursor: 'pointer',
+/* ── Shared styles ─────────────────────────────────────────────────────── */
+const arrowBtn = (side) => ({
+  position: 'absolute',
+  top: '50%',
+  [side]: '0.75rem',
+  transform: 'translateY(-50%)',
+  width: '38px', height: '38px',
+  background: 'rgba(13,31,45,0.5)',
+  border: '1px solid rgba(255,255,255,0.2)',
+  borderRadius: '50%',
   display: 'flex', alignItems: 'center', justifyContent: 'center',
-  color: 'var(--secondary)', flexShrink: 0,
-  transition: 'background 0.2s',
+  cursor: 'pointer',
+  backdropFilter: 'blur(6px)',
+  transition: 'background 0.18s ease',
+  zIndex: 5,
+});
+
+const inlineArrowBtn = {
+  width: '34px', height: '34px',
+  background: '#f0eee9',
+  border: '1px solid #e0ddd6',
+  borderRadius: '50%',
+  display: 'flex', alignItems: 'center', justifyContent: 'center',
+  cursor: 'pointer',
+  color: 'var(--secondary)',
+  transition: 'background 0.18s',
 };
 
 export default AnnouncementBanner;
