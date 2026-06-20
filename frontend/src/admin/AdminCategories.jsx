@@ -9,6 +9,7 @@ const AdminCategories = () => {
   const [editingId, setEditingId] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [notification, setNotification] = useState('');
+  const [userRole, setUserRole] = useState('');
 
   const showNotification = (msg) => {
     setNotification(msg);
@@ -25,6 +26,15 @@ const AdminCategories = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUserRole(payload.role || '');
+      } catch (e) {
+        console.error('Error decoding token:', e);
+      }
+    }
     fetchCategories();
   }, []);
 
@@ -138,15 +148,17 @@ const AdminCategories = () => {
       <div className="admin-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h3 style={{ margin: 0 }}>Categories List ({categories.length})</h3>
-          <motion.button 
-            whileHover={{ scale: 1.05 }} 
-            whileTap={{ scale: 0.95 }}
-            className="btn-primary" 
-            style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-            onClick={() => { handleCancel(); setIsFormOpen(!isFormOpen); }}
-          >
-            {isFormOpen ? <><X size={16}/> Close</> : <><Plus size={16}/> Add Category</>}
-          </motion.button>
+          {true && (
+            <motion.button 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              className="btn-primary" 
+              style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              onClick={() => { handleCancel(); setIsFormOpen(!isFormOpen); }}
+            >
+              {isFormOpen ? <><X size={16}/> Close</> : <><Plus size={16}/> Add Category</>}
+            </motion.button>
+          )}
         </div>
         
         {categories.length === 0 ? (
@@ -181,12 +193,12 @@ const AdminCategories = () => {
                       <td style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '400px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {category.description || '-'}
                       </td>
-                      <td>
-                        <div className="action-btns" style={{ justifyContent: 'flex-end' }}>
-                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" onClick={() => handleEdit(category)} title="Edit"><Edit2 size={16} /></motion.button>
-                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon danger" onClick={() => handleDelete(category.id)} title="Delete"><Trash2 size={16} /></motion.button>
-                        </div>
-                      </td>
+                        <td>
+                          <div className="action-btns" style={{ justifyContent: 'flex-end' }}>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" onClick={() => handleEdit(category)} title="Edit"><Edit2 size={16} /></motion.button>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon danger" onClick={() => handleDelete(category.id)} title="Delete"><Trash2 size={16} /></motion.button>
+                          </div>
+                        </td>
                     </motion.tr>
                   ))}
                 </AnimatePresence>

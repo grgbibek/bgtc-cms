@@ -3,7 +3,7 @@ import multer from 'multer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
-import { protect, adminOnly } from '../middleware/authMiddleware.js';
+import { protect, adminOnly, managerOrAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -48,7 +48,7 @@ const upload = multer({
  * POST /api/upload
  * Uploads an image and returns its public URL.
  */
-router.post('/', protect, adminOnly, upload.single('image'), (req, res) => {
+router.post('/', protect, managerOrAdmin, upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded.' });
   }

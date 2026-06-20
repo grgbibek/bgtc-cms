@@ -14,74 +14,68 @@ import { useContent } from '../hooks/useQueries';
 const heroVideoBg = 'https://images.unsplash.com/photo-1580694080374-e81a4f694f5e?auto=format&fit=crop&q=80&w=1600';
 // Gurkha/military training photo
 
-const ARMY_CLASSES = [
-  {
-    id: 'british-gurkha',
-    flag: '🇬🇧',
-    title: 'British Gurkha Army',
-    subtitle: 'Most Prestigious Selection',
-    desc: 'Join the elite British Gurkha Regiment. Training covering all physical tests including heaving, 800m, 1.5-mile run, Doko Race (5.8 KM) and more.',
-    badge: 'Once a Year',
-    badgeColor: '#c9a84c',
-    img: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&q=80&w=800',
-    route: '/classes/british-gurkha',
-  },
-  {
-    id: 'singapore-police',
-    flag: '🇸🇬',
-    title: 'Singapore Police Force',
-    subtitle: 'Gurkha Contingent',
-    desc: 'Serve as part of the elite Gurkha Contingent of Singapore Police Force — a specialized counter-terrorist and guard force.',
-    badge: 'Once a Year',
-    badgeColor: '#c9a84c',
-    img: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80&w=800',
-    route: '/classes/singapore-police',
-  },
-  {
-    id: 'indian-gorkha',
-    flag: '🇮🇳',
-    title: 'Indian Gorkha Army',
-    subtitle: 'Six Gorkha Regiments',
-    desc: 'Join one of the six prestigious Gorkha regiments of the Indian Army, established under the 1947 Tripartite Agreement.',
-    badge: '1–2 Times/Year',
-    badgeColor: '#3d5a3e',
-    img: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=800',
-    route: '/classes/indian-gorkha',
-  },
-];
-
-const FACILITIES = [
-  { icon: <Dumbbell size={28} />,  title: 'Gym Hall',      desc: 'Fully equipped indoor gym with battle PT, circuit training, power bag lifts, and more.' },
-  { icon: <HomeIcon size={28} />,  title: 'Hostel',        desc: 'Comfortable on-site accommodation for students training away from home.' },
-  { icon: <BookOpen size={28} />,  title: 'Education',     desc: 'Academic support and coaching for the written portions of army selection.' },
-  { icon: <Utensils size={28} />,  title: 'Canteen',       desc: 'Nutritious meals designed to fuel your training and support peak physical performance.' },
-  { icon: <Waves size={28} />,     title: 'Swimming',      desc: 'Swimming training facility for full-body conditioning and endurance.' },
-  { icon: <Target size={28} />,    title: 'Sports Hall',   desc: 'Indoor courts for badminton and volleyball; multi-beep tests and medicine ball training.' },
-];
-
-const TEAM = [
-  { name: 'Prakash Gurung',      role: 'Managing Director',             img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400' },
-  { name: 'Kum Prasad Tamang',   role: 'Physical Training Instructor',  img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400' },
-  { name: 'Sajan Pata Magar',    role: 'Physical Training Instructor',  img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400' },
-];
-
 /* ════════════════════════════════════════════════════════════════════════ */
 const Home = () => {
-  const navigate  = useNavigate();
+  const navigate = useNavigate();
   const { data: content = {} } = useContent();
 
-  const heroTitle    = content.hero_title    || 'Discipline Today,\nStrength Tomorrow';
+  const heroTitle = content.hero_title || 'Discipline Today,\nStrength Tomorrow';
   const heroSubtitle = content.hero_subtitle || 'Quality pre-army physical training for youth aspiring to join the British Gurkha Army, Singapore Police Force, Indian Army, and more — guided by Ex-British Army PTIs.';
-  const aboutText    = content.about_us      || 'A team of professionals with high experience in pre-Army training. BGTC has successfully trained thousands of students, achieving remarkable results in selection. Ranked 2nd best pre-army training centre across Nepal.';
+  const aboutText = content.about_us || 'A team of professionals with high experience in pre-Army training. BGTC has successfully trained thousands of students, achieving remarkable results in selection. Ranked 2nd best pre-army training centre across Nepal.';
   const contactPhone = content.contact_phone || '9803402460';
   const contactEmail = content.contact_email || 'bgtcentre@gmail.com';
-  const contactAddr  = content.contact_address || 'Kantipur Marga-15, Near Ban Campus, Pokhara';
+  const contactAddr = content.contact_address || 'Kantipur Marga-15, Near Ban Campus, Pokhara';
 
   const stats = [
-    { value: '80%',    label: 'British Gurkha Success Rate' },
-    { value: '64%',    label: 'Singapore Police Success Rate' },
-    { value: '55%',    label: 'Indian Army Success Rate' },
-    { value: '1000+',  label: 'Students Trained' },
+    { value: content.success_rate_bga || '80%', label: 'British Gurkha Success Rate' },
+    { value: content.success_rate_spf || '64%', label: 'Singapore Police Success Rate' },
+    { value: content.success_rate_ia || '55%', label: 'Indian Army Success Rate' },
+    { value: content.students_trained || '1000+', label: 'Students Trained' },
+  ];
+
+  const ARMY_CLASSES = [
+    {
+      id: 'british-gurkha', flag: '🇬🇧',
+      title: content.class_1_title || 'British Gurkha Army',
+      subtitle: content.class_1_subtitle || 'Most Prestigious Selection',
+      desc: content.class_1_desc || 'Join the elite British Gurkha Regiment. Training covering all physical tests including heaving, 800m, 1.5-mile run, Doko Race (5.8 KM) and more.',
+      badge: content.class_1_badge || 'Once a Year', badgeColor: '#c9a84c',
+      img: content.class_1_img || 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&q=80&w=800',
+      route: '/classes/british-gurkha',
+    },
+    {
+      id: 'singapore-police', flag: '🇸🇬',
+      title: content.class_2_title || 'Singapore Police Force',
+      subtitle: content.class_2_subtitle || 'Gurkha Contingent',
+      desc: content.class_2_desc || 'Serve as part of the elite Gurkha Contingent of Singapore Police Force — a specialized counter-terrorist and guard force.',
+      badge: content.class_2_badge || 'Once a Year', badgeColor: '#c9a84c',
+      img: content.class_2_img || 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80&w=800',
+      route: '/classes/singapore-police',
+    },
+    {
+      id: 'indian-gorkha', flag: '🇮🇳',
+      title: content.class_3_title || 'Indian Gorkha Army',
+      subtitle: content.class_3_subtitle || 'Six Gorkha Regiments',
+      desc: content.class_3_desc || 'Join one of the six prestigious Gorkha regiments of the Indian Army, established under the 1947 Tripartite Agreement.',
+      badge: content.class_3_badge || '1–2 Times/Year', badgeColor: '#3d5a3e',
+      img: content.class_3_img || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=800',
+      route: '/classes/indian-gorkha',
+    },
+  ];
+
+  const FACILITIES = [
+    { icon: <Dumbbell size={28} />, title: content.service_1_title || 'Gym Hall', desc: content.service_1_desc || 'Fully equipped indoor gym with battle PT, circuit training, power bag lifts, and more.' },
+    { icon: <HomeIcon size={28} />, title: content.service_2_title || 'Hostel', desc: content.service_2_desc || 'Comfortable on-site accommodation for students training away from home.' },
+    { icon: <BookOpen size={28} />, title: content.service_3_title || 'Education', desc: content.service_3_desc || 'Academic support and coaching for the written portions of army selection.' },
+    { icon: <Utensils size={28} />, title: content.service_4_title || 'Canteen', desc: content.service_4_desc || 'Nutritious meals designed to fuel your training and support peak physical performance.' },
+    { icon: <Waves size={28} />, title: content.service_5_title || 'Swimming', desc: content.service_5_desc || 'Swimming training facility for full-body conditioning and endurance.' },
+    { icon: <Target size={28} />, title: content.service_6_title || 'Sports Hall', desc: content.service_6_desc || 'Indoor courts for badminton and volleyball; multi-beep tests and medicine ball training.' },
+  ];
+
+  const TEAM = [
+    { name: content.team_1_name || 'Prakash Gurung', role: content.team_1_role || 'Managing Director', img: content.team_1_img || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400' },
+    { name: content.team_2_name || 'Kum Prasad Tamang', role: content.team_2_role || 'Physical Training Instructor', img: content.team_2_img || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400' },
+    { name: content.team_3_name || 'Sajan Pata Magar', role: content.team_3_role || 'Physical Training Instructor', img: content.team_3_img || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400' },
   ];
 
   return (
@@ -151,9 +145,9 @@ const Home = () => {
             {/* Quick trust indicators */}
             <div style={{ display: 'flex', gap: '2rem', marginTop: '3rem', flexWrap: 'wrap' }}>
               {[
-                { icon: <CheckCircle size={16} />, text: 'Ranked 2nd Best in Nepal' },
-                { icon: <CheckCircle size={16} />, text: 'Ex-British Army Trainers' },
-                { icon: <CheckCircle size={16} />, text: '1000+ Successful Students' },
+                { icon: <CheckCircle size={16} />, text: content.trust_1_title || 'Ranked 2nd Best in Nepal' },
+                { icon: <CheckCircle size={16} />, text: content.trust_2_title || 'Ex-British Army Trainers' },
+                { icon: <CheckCircle size={16} />, text: content.trust_3_title || '1000+ Successful Students' },
               ].map((t, i) => (
                 <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'rgba(255,255,255,0.7)', fontSize: '0.88rem' }}>
                   <span style={{ color: 'var(--primary)' }}>{t.icon}</span>
@@ -251,10 +245,10 @@ const Home = () => {
               style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}
             >
               {[
-                { label: 'Physical Training', value: 'Daily Drills', color: 'var(--army)' },
-                { label: 'Selection Rate', value: '80% BGA', color: 'var(--primary)' },
-                { label: 'Experience', value: '20+ Years', color: 'var(--secondary)' },
-                { label: 'Location', value: 'Pokhara', color: 'var(--army)' },
+                { label: content.about_bullet_1_label || 'Physical Training', value: content.about_bullet_1_value || 'Daily Drills', color: 'var(--army)' },
+                { label: content.about_bullet_2_label || 'Selection Rate', value: content.about_bullet_2_value || '80% BGA', color: 'var(--primary)' },
+                { label: content.about_bullet_3_label || 'Experience', value: content.about_bullet_3_value || '20+ Years', color: 'var(--secondary)' },
+                { label: content.about_bullet_4_label || 'Location', value: content.about_bullet_4_value || 'Pokhara', color: 'var(--army)' },
               ].map((item, i) => (
                 <div key={i} style={{
                   background: '#f4f5f0', padding: '1.75rem', borderRadius: '12px',
@@ -502,8 +496,8 @@ const Home = () => {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
               {[
                 { icon: <MapPin size={20} />, label: 'Address', value: contactAddr },
-                { icon: <Phone size={20} />,  label: 'Phone',   value: contactPhone },
-                { icon: <Mail size={20} />,   label: 'Email',   value: contactEmail },
+                { icon: <Phone size={20} />, label: 'Phone', value: contactPhone },
+                { icon: <Mail size={20} />, label: 'Email', value: contactEmail },
               ].map((item, i) => (
                 <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
                   <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: '8px', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0 }}>
@@ -526,10 +520,14 @@ const Home = () => {
           <div className="footer-grid">
             <div className="footer-brand">
               <div className="logo" style={{ marginBottom: '1rem' }}>
-                <div className="logo-emblem"><Shield size={20} strokeWidth={2.5} /></div>
+                {content.site_logo ? (
+                  <img src={content.site_logo} alt={content.site_name || 'BGTC'} style={{ paddingTop: '0.5rem', height: '4.5rem', objectFit: 'contain', marginRight: '0.5rem' }} />
+                ) : (
+                  <div className="logo-emblem"><Shield size={20} strokeWidth={2.5} /></div>
+                )}
                 <div>
-                  <span className="logo-text-main">BGTC</span>
-                  <span className="logo-text-sub">British Gurkha Training Centre</span>
+                  <span className="logo-text-main">{content.site_name || 'BGTC'}</span>
+                  <span className="logo-text-sub">{content.site_tagline || 'British Gurkha Training Centre'}</span>
                 </div>
               </div>
               <p>Providing quality pre-army physical training since our inception in Pokhara, Nepal. Ranked 2nd best pre-army training centre in Nepal.</p>
@@ -548,9 +546,9 @@ const Home = () => {
               <h4>Our Classes</h4>
               <ul>
                 {[
-                  ['/classes/british-gurkha',  'British Gurkha Army'],
+                  ['/classes/british-gurkha', 'British Gurkha Army'],
                   ['/classes/singapore-police', 'Singapore Police Force'],
-                  ['/classes/indian-gorkha',    'Indian Gorkha Army'],
+                  ['/classes/indian-gorkha', 'Indian Gorkha Army'],
                 ].map(([to, label]) => (
                   <li key={to}><Link to={to}>{label}</Link></li>
                 ))}

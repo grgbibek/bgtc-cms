@@ -62,6 +62,20 @@ const AdminOnlyRoute = ({ children }) => {
   return children;
 };
 
+const ManagerOrAdminRoute = ({ children }) => {
+  const token = localStorage.getItem('adminToken');
+  if (!token) return <Navigate to="/admin/login" replace />;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    if (!['super_admin', 'admin', 'manager'].includes(payload.role)) return <Navigate to="/admin" replace />;
+  } catch (e) {
+    return <Navigate to="/admin/login" replace />;
+  }
+  return children;
+};
+
+import Chatbot from './components/Chatbot';
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 function App() {
   return (
@@ -91,10 +105,11 @@ function App() {
             <Route path="categories"    element={<AdminCategories />} />
             <Route path="users"         element={<AdminOnlyRoute><AdminUsers /></AdminOnlyRoute>} />
             <Route path="settings"      element={<AdminOnlyRoute><AdminSettings /></AdminOnlyRoute>} />
-            <Route path="content"       element={<AdminOnlyRoute><AdminContent /></AdminOnlyRoute>} />
+            <Route path="content"       element={<ManagerOrAdminRoute><AdminContent /></ManagerOrAdminRoute>} />
           </Route>
         </Routes>
       </Suspense>
+      <Chatbot />
     </BrowserRouter>
   );
 }

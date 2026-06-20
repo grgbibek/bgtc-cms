@@ -1,6 +1,6 @@
 import express from 'express';
 import { getCategories, getCategoryById, createCategory, updateCategory, deleteCategory } from '../controllers/categoryController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { protect, adminOnly, managerOrAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -64,7 +64,7 @@ router.get('/:id', getCategoryById);
  *       201:
  *         description: Created
  */
-router.post('/', protect, createCategory);
+router.post('/', protect, managerOrAdmin, createCategory);
 
 /**
  * @swagger
@@ -95,7 +95,7 @@ router.post('/', protect, createCategory);
  *       200:
  *         description: Updated
  */
-router.put('/:id', protect, updateCategory);
+router.put('/:id', protect, managerOrAdmin, updateCategory);
 
 /**
  * @swagger
@@ -115,6 +115,6 @@ router.put('/:id', protect, updateCategory);
  *       200:
  *         description: Deleted
  */
-router.delete('/:id', protect, deleteCategory);
+router.delete('/:id', protect, managerOrAdmin, deleteCategory);
 
 export default router;

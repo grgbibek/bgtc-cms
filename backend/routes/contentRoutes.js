@@ -1,6 +1,6 @@
 import express from 'express';
 import { getContent, updateContent } from '../controllers/contentController.js';
-import { protect, adminOnly } from '../middleware/authMiddleware.js';
+import { protect, adminOnly, managerOrAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -46,6 +46,6 @@ router.get('/', getContent);
  *       200:
  *         description: Updated content
  */
-router.post('/', protect, adminOnly, updateContent);
+router.post('/', protect, managerOrAdmin, updateContent);
 
 export default router;

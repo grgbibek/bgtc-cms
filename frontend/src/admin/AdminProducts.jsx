@@ -10,6 +10,7 @@ const AdminProducts = () => {
   const [editingId, setEditingId] = useState(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [notification, setNotification] = useState('');
+  const [userRole, setUserRole] = useState('');
 
   const showNotification = (msg) => {
     setNotification(msg);
@@ -35,6 +36,15 @@ const AdminProducts = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUserRole(payload.role || '');
+      } catch (e) {
+        console.error('Error decoding token:', e);
+      }
+    }
     fetchProducts();
     fetchCategories();
   }, []);
@@ -230,15 +240,17 @@ const AdminProducts = () => {
       <div className="admin-card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h3 style={{ margin: 0 }}>Inventory List ({products.length})</h3>
-          <motion.button 
-            whileHover={{ scale: 1.05 }} 
-            whileTap={{ scale: 0.95 }}
-            className="btn-primary" 
-            style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-            onClick={() => { handleCancel(); setIsFormOpen(!isFormOpen); }}
-          >
-            {isFormOpen ? <><X size={16}/> Close Panel</> : <><Plus size={16}/> Add Product</>}
-          </motion.button>
+          {true && (
+            <motion.button 
+              whileHover={{ scale: 1.05 }} 
+              whileTap={{ scale: 0.95 }}
+              className="btn-primary" 
+              style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              onClick={() => { handleCancel(); setIsFormOpen(!isFormOpen); }}
+            >
+              {isFormOpen ? <><X size={16}/> Close Panel</> : <><Plus size={16}/> Add Product</>}
+            </motion.button>
+          )}
         </div>
         
         {products.length === 0 ? (
@@ -296,12 +308,12 @@ const AdminProducts = () => {
                         {product.description}
                       </td>
 
-                      <td>
-                        <div className="action-btns" style={{ justifyContent: 'flex-end' }}>
-                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" onClick={() => handleEdit(product)} title="Edit"><Edit2 size={16} /></motion.button>
-                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon danger" onClick={() => handleDelete(product.id)} title="Delete"><Trash2 size={16} /></motion.button>
-                        </div>
-                      </td>
+                        <td>
+                          <div className="action-btns" style={{ justifyContent: 'flex-end' }}>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" onClick={() => handleEdit(product)} title="Edit"><Edit2 size={16} /></motion.button>
+                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon danger" onClick={() => handleDelete(product.id)} title="Delete"><Trash2 size={16} /></motion.button>
+                          </div>
+                        </td>
                     </motion.tr>
                   ))}
                 </AnimatePresence>

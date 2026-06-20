@@ -5,53 +5,53 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useContent } from '../hooks/useQueries';
 
-const FACILITIES_DATA = [
-  {
-    id: 'gym',
-    icon: <Dumbbell size={32} />,
-    title: 'Gym & Training Hall',
-    desc: 'Fully equipped indoor gym tailored for pre-army physical training. Features battle PT equipment, power bags, circuit training stations, and dedicated zones for heaving, sit-ups, and push-ups.',
-    img: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 'hostel',
-    icon: <Home size={32} />,
-    title: 'Student Hostel',
-    desc: 'Comfortable and disciplined on-site accommodation for out-of-town students. Our hostel environment fosters brotherhood and ensures students follow a strict daily routine essential for military preparation.',
-    img: 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 'education',
-    icon: <BookOpen size={32} />,
-    title: 'Education Center',
-    desc: 'Academic excellence is just as important as physical fitness. We provide dedicated classrooms and experienced tutors to prepare students for the written examinations required by the British and Singapore armies.',
-    img: 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 'canteen',
-    icon: <Utensils size={32} />,
-    title: 'Nutritional Canteen',
-    desc: 'Our canteen serves high-quality, nutritious meals designed specifically for individuals undergoing intense physical training. We ensure our students get the right balance of proteins, carbs, and hydration.',
-    img: 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 'swimming',
-    icon: <Waves size={32} />,
-    title: 'Swimming Facility',
-    desc: 'Access to swimming facilities for full-body conditioning, endurance building, and specific aquatic tests that may be part of selection processes.',
-    img: 'https://images.unsplash.com/photo-1519315901367-f34bf9150f01?auto=format&fit=crop&q=80&w=800'
-  },
-  {
-    id: 'sports',
-    icon: <Target size={32} />,
-    title: 'Sports Courts',
-    desc: 'Indoor and outdoor courts for badminton and volleyball. These activities improve agility, teamwork, and reflexes while providing a healthy recreational outlet.',
-    img: 'https://images.unsplash.com/photo-1628795092040-d124cc2c3dfb?auto=format&fit=crop&q=80&w=800'
-  }
-];
-
 const Facilities = () => {
   const { data: content = {} } = useContent();
+
+  const FACILITIES_DATA = [
+    {
+      id: 'gym',
+      icon: <Dumbbell size={32} />,
+      title: content.service_1_title || 'Gym & Training Hall',
+      desc: content.service_1_desc || 'Fully equipped indoor gym tailored for pre-army physical training. Features battle PT equipment, power bags, circuit training stations, and dedicated zones for heaving, sit-ups, and push-ups.',
+      img: content.service_1_img || 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+      id: 'hostel',
+      icon: <Home size={32} />,
+      title: content.service_2_title || 'Student Hostel',
+      desc: content.service_2_desc || 'Comfortable and disciplined on-site accommodation for out-of-town students. Our hostel environment fosters brotherhood and ensures students follow a strict daily routine essential for military preparation.',
+      img: content.service_2_img || 'https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+      id: 'education',
+      icon: <BookOpen size={32} />,
+      title: content.service_3_title || 'Education Center',
+      desc: content.service_3_desc || 'Academic excellence is just as important as physical fitness. We provide dedicated classrooms and experienced tutors to prepare students for the written examinations required by the British and Singapore armies.',
+      img: content.service_3_img || 'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+      id: 'canteen',
+      icon: <Utensils size={32} />,
+      title: content.service_4_title || 'Nutritional Canteen',
+      desc: content.service_4_desc || 'Our canteen serves high-quality, nutritious meals designed specifically for individuals undergoing intense physical training. We ensure our students get the right balance of proteins, carbs, and hydration.',
+      img: content.service_4_img || 'https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+      id: 'swimming',
+      icon: <Waves size={32} />,
+      title: content.service_5_title || 'Swimming Facility',
+      desc: content.service_5_desc || 'Access to swimming facilities for full-body conditioning, endurance building, and specific aquatic tests that may be part of selection processes.',
+      img: content.service_5_img || 'https://images.unsplash.com/photo-1519315901367-f34bf9150f01?auto=format&fit=crop&q=80&w=800'
+    },
+    {
+      id: 'sports',
+      icon: <Target size={32} />,
+      title: content.service_6_title || 'Sports Courts',
+      desc: content.service_6_desc || 'Indoor and outdoor courts for badminton and volleyball. These activities improve agility, teamwork, and reflexes while providing a healthy recreational outlet.',
+      img: content.service_6_img || 'https://images.unsplash.com/photo-1628795092040-d124cc2c3dfb?auto=format&fit=crop&q=80&w=800'
+    }
+  ];
 
   return (
     <div style={{ background: '#f4f5f0', minHeight: '100vh' }}>

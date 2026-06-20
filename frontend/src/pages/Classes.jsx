@@ -3,74 +3,62 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, ChevronRight, CheckCircle, Info } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
-import { useProducts } from '../hooks/useQueries';
+import { useProducts, useContent } from '../hooks/useQueries';
 
-const ARMY_CLASSES = [
-  {
-    id:       'british-gurkha',
-    flag:     '🇬🇧',
-    title:    'British Gurkha Army',
-    subtitle: 'Most Prestigious Selection',
-    desc:     'Join the elite British Gurkha Regiment — one of the most respected military forces in the world. Our training covers the full spectrum of physical requirements for British Gurkha selection.',
-    badge:    'Once a Year',
-    frequency:'Open once a year at British Gurkha Army Camp, Pokhara and Dharan.',
-    eligibility: [
-      'Nepalese youth from all parts of Nepal',
-      'Except Kathmandu, Bhaktapur, and Lalitpur districts',
-      'All castes eligible',
-      'Age and height as per BGA requirements',
-    ],
-    selection: ['Registration & Documentation', 'Regional Selection (Pokhara/Dharan)', 'Physical Tests (Heaving, 800m, Doko Race etc.)', 'Central Selection', 'Medical & Final'],
-    successRate: '80%',
-    img: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&q=80&w=900',
-    color: 'var(--primary)',
-    route: '/classes/british-gurkha',
-  },
-  {
-    id:       'singapore-police',
-    flag:     '🇸🇬',
-    title:    'Singapore Police Force',
-    subtitle: 'Gurkha Contingent',
-    desc:     'Serve as part of the Gurkha Contingent of Singapore Police Force — a specialized guard force and counter-terrorist unit. A prestigious and well-compensated posting.',
-    badge:    'Once a Year',
-    frequency:'Open once a year at BGT Camp Pokhara and Dharan.',
-    eligibility: [
-      'Nepalese youth from all parts of Nepal',
-      'Except Kathmandu Valley districts',
-      'All castes eligible',
-      'Age and height as per SPF requirements',
-    ],
-    selection: ['Registration & Documentation', 'Regional Selection (Pokhara/Dharan)', 'Physical Fitness Tests', 'Central Selection', 'Medical & Final'],
-    successRate: '64%',
-    img: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80&w=900',
-    color: '#e74c3c',
-    route: '/classes/singapore-police',
-  },
-  {
-    id:       'indian-gorkha',
-    flag:     '🇮🇳',
-    title:    'Indian Gorkha Army',
-    subtitle: 'Six Gorkha Regiments',
-    desc:     'Join one of the six prestigious Gorkha regiments of the Indian Army. Based on the 1947 Britain-India-Nepal Tripartite Agreement, this is a well-established and respected career path.',
-    badge:    '1–2 Times/Year',
-    frequency:'Open 1–2 times per year at regional selection camps.',
-    eligibility: [
-      'Nepalese youth from all parts of Nepal',
-      'All castes eligible',
-      'Chaudhary caste is NOT eligible',
-      'Age and height as per IA requirements',
-    ],
-    selection: ['Registration & Documentation', 'Regional Selection Camp', 'Physical Fitness Tests', 'Medical Test', 'Final Result'],
-    successRate: '55%',
-    img: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=900',
-    color: '#ff9800',
-    route: '/classes/indian-gorkha',
-  },
-];
+
 
 const Classes = () => {
   const navigate  = useNavigate();
   const [selected, setSelected] = useState(null);
+  const { data: content = {} } = useContent();
+
+  const ARMY_CLASSES = [
+    {
+      id:       'british-gurkha',
+      flag:     '🇬🇧',
+      title:    content.class_1_title || 'British Gurkha Army',
+      subtitle: content.class_1_subtitle || 'Most Prestigious Selection',
+      desc:     content.class_1_desc || 'Join the elite British Gurkha Regiment — one of the most respected military forces in the world. Our training covers the full spectrum of physical requirements for British Gurkha selection.',
+      badge:    content.class_1_badge || 'Once a Year',
+      frequency:content.class_1_frequency || 'Open once a year at British Gurkha Army Camp, Pokhara and Dharan.',
+      eligibility: (content.class_1_eligibility || 'Nepalese youth from all parts of Nepal\nExcept Kathmandu, Bhaktapur, and Lalitpur districts\nAll castes eligible\nAge and height as per BGA requirements').split('\n').filter(Boolean),
+      selection: (content.class_1_selection || 'Registration & Documentation | \nRegional Selection (Pokhara/Dharan) | \nPhysical Tests (Heaving, 800m, Doko Race etc.) | \nCentral Selection | \nMedical & Final | ').split('\n').filter(Boolean).map(s => s.split('|')[0].trim()),
+      successRate: content.success_rate_bga || '80%',
+      img: content.class_1_img || 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&q=80&w=900',
+      color: 'var(--primary)',
+      route: '/classes/british-gurkha',
+    },
+    {
+      id:       'singapore-police',
+      flag:     '🇸🇬',
+      title:    content.class_2_title || 'Singapore Police Force',
+      subtitle: content.class_2_subtitle || 'Gurkha Contingent',
+      desc:     content.class_2_desc || 'Serve as part of the Gurkha Contingent of Singapore Police Force — a specialized guard force and counter-terrorist unit. A prestigious and well-compensated posting.',
+      badge:    content.class_2_badge || 'Once a Year',
+      frequency:content.class_2_frequency || 'Open once a year at BGT Camp Pokhara and Dharan.',
+      eligibility: (content.class_2_eligibility || 'Nepalese youth from all parts of Nepal\nExcept Kathmandu Valley districts\nAll castes eligible\nAge and height as per SPF requirements').split('\n').filter(Boolean),
+      selection: (content.class_2_selection || 'Registration & Documentation | \nRegional Selection (Pokhara/Dharan) | \nPhysical Fitness Tests | \nCentral Selection | \nMedical & Final | ').split('\n').filter(Boolean).map(s => s.split('|')[0].trim()),
+      successRate: content.success_rate_spf || '64%',
+      img: content.class_2_img || 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80&w=900',
+      color: '#e74c3c',
+      route: '/classes/singapore-police',
+    },
+    {
+      id:       'indian-gorkha',
+      flag:     '🇮🇳',
+      title:    content.class_3_title || 'Indian Gorkha Army',
+      subtitle: content.class_3_subtitle || 'Six Gorkha Regiments',
+      desc:     content.class_3_desc || 'Join one of the six prestigious Gorkha regiments of the Indian Army. Based on the 1947 Britain-India-Nepal Tripartite Agreement, this is a well-established and respected career path.',
+      badge:    content.class_3_badge || '1–2 Times/Year',
+      frequency:content.class_3_frequency || 'Open 1–2 times per year at regional selection camps.',
+      eligibility: (content.class_3_eligibility || 'Nepalese youth from all parts of Nepal\nAll castes eligible\nChaudhary caste is NOT eligible\nAge and height as per IA requirements').split('\n').filter(Boolean),
+      selection: (content.class_3_selection || 'Registration & Documentation | \nRegional Selection Camp | \nPhysical Fitness Tests | \nMedical Test | \nFinal Result | ').split('\n').filter(Boolean).map(s => s.split('|')[0].trim()),
+      successRate: content.success_rate_ia || '55%',
+      img: content.class_3_img || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=900',
+      color: '#ff9800',
+      route: '/classes/indian-gorkha',
+    },
+  ];
 
   return (
     <div style={{ background: '#f4f5f0', minHeight: '100vh' }}>
@@ -135,7 +123,9 @@ const Classes = () => {
                     border: `1px solid ${cls.color}`, borderRadius: '8px',
                     padding: '0.75rem 1.25rem', textAlign: 'center',
                   }}>
-                    <p style={{ color: cls.color, fontFamily: 'Rajdhani, sans-serif', fontWeight: 700, fontSize: '1.8rem', margin: 0, lineHeight: 1 }}>{cls.successRate}</p>
+                    <p style={{ color: cls.color, fontFamily: 'Rajdhani, sans-serif', fontWeight: 700, fontSize: '1.8rem', margin: 0, lineHeight: 1 }}>
+                      {cls.successRate}
+                    </p>
                     <p style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.08em', margin: 0, fontFamily: 'Rajdhani, sans-serif' }}>Success Rate</p>
                   </div>
                 </div>

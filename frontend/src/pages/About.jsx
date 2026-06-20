@@ -5,28 +5,28 @@ import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import { useContent } from '../hooks/useQueries';
 
-const TEAM = [
-  { name: 'Prakash Gurung',    role: 'Managing Director',            img: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400' },
-  { name: 'Kum Prasad Tamang', role: 'Physical Training Instructor', img: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400' },
-  { name: 'Sajan Pata Magar',  role: 'Physical Training Instructor', img: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400' },
-];
-
-const SUCCESS_STATS = [
-  { army: 'British Gurkha Army',        rate: '80%', flag: '🇬🇧', color: 'var(--primary)' },
-  { army: 'Singapore Police Force',     rate: '64%', flag: '🇸🇬', color: 'var(--army)' },
-  { army: 'Indian Gorkha Army',         rate: '55%', flag: '🇮🇳', color: '#e57373' },
-];
-
-const VALUES = [
-  { icon: <Shield size={28} />,  title: 'Discipline',   desc: 'We instil military-grade discipline from day one. Punctuality, commitment, and respect are non-negotiable.' },
-  { icon: <Target size={28} />,  title: 'Excellence',   desc: 'Every drill, every session is designed to push you beyond your limits and towards peak performance.' },
-  { icon: <Users size={28} />,   title: 'Brotherhood',  desc: 'Training together builds bonds stronger than steel. Our graduates carry the BGTC spirit throughout their careers.' },
-  { icon: <Award size={28} />,   title: 'Proven Track Record', desc: 'Ranked 2nd best pre-army training centre in Nepal with thousands of successfully placed graduates.' },
-];
-
 const About = () => {
   const { data: content = {} } = useContent();
   const aboutText = content.about_us || 'A team of professionals with high experience in pre-Army training. BGTC has successfully trained thousands of students, achieving remarkable results in selection. Ranked 2nd best pre-army training centre across Nepal based on selection success rate.';
+
+  const TEAM = [
+    { name: content.team_1_name || 'Prakash Gurung',      role: content.team_1_role || 'Managing Director',             img: content.team_1_img || 'https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400' },
+    { name: content.team_2_name || 'Kum Prasad Tamang',   role: content.team_2_role || 'Physical Training Instructor',  img: content.team_2_img || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400' },
+    { name: content.team_3_name || 'Sajan Pata Magar',    role: content.team_3_role || 'Physical Training Instructor',  img: content.team_3_img || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400' },
+  ];
+
+  const SUCCESS_STATS = [
+    { army: 'British Gurkha Army',        rate: content.success_rate_bga || '80%', flag: '🇬🇧', color: 'var(--primary)' },
+    { army: 'Singapore Police Force',     rate: content.success_rate_spf || '64%', flag: '🇸🇬', color: 'var(--army)' },
+    { army: 'Indian Gorkha Army',         rate: content.success_rate_ia || '55%', flag: '🇮🇳', color: '#e57373' },
+  ];
+
+  const VALUES = [
+    { icon: <Shield size={28} />,  title: content.value_1_title || 'Discipline',   desc: content.value_1_desc || 'We instil military-grade discipline from day one. Punctuality, commitment, and respect are non-negotiable.' },
+    { icon: <Target size={28} />,  title: content.value_2_title || 'Excellence',   desc: content.value_2_desc || 'Every drill, every session is designed to push you beyond your limits and towards peak performance.' },
+    { icon: <Users size={28} />,   title: content.value_3_title || 'Brotherhood',  desc: content.value_3_desc || 'Training together builds bonds stronger than steel. Our graduates carry the BGTC spirit throughout their careers.' },
+    { icon: <Award size={28} />,   title: content.value_4_title || 'Proven Track Record', desc: content.value_4_desc || 'Ranked 2nd best pre-army training centre in Nepal with thousands of successfully placed graduates.' },
+  ];
 
   return (
     <div style={{ background: '#f4f5f0' }}>
@@ -111,7 +111,10 @@ const About = () => {
           </div>
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '2rem' }}>
-            {SUCCESS_STATS.map((s, i) => (
+            {SUCCESS_STATS.map((s, i) => {
+              const sr = s.army === 'British Gurkha Army' ? content.success_rate_bga : s.army === 'Singapore Police Force' ? content.success_rate_spf : s.army === 'Indian Gorkha Army' ? content.success_rate_ia : null;
+              const rate = sr || s.rate;
+              return (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
@@ -125,11 +128,11 @@ const About = () => {
                 }}
               >
                 <p style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>{s.flag}</p>
-                <p style={{ color: s.color, fontFamily: 'Rajdhani, sans-serif', fontWeight: 700, fontSize: '4rem', lineHeight: 1, margin: '0 0 0.5rem' }}>{s.rate}</p>
+                <p style={{ color: s.color, fontFamily: 'Rajdhani, sans-serif', fontWeight: 700, fontSize: '4rem', lineHeight: 1, margin: '0 0 0.5rem' }}>{rate}</p>
                 <p style={{ color: 'rgba(255,255,255,0.65)', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.9rem' }}>{s.army}</p>
                 <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: '0.8rem', marginTop: '0.5rem', fontFamily: 'Inter, sans-serif' }}>Selection success rate</p>
               </motion.div>
-            ))}
+            )})}
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '3rem' }}>

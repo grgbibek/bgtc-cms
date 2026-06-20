@@ -4,68 +4,48 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, CheckCircle, Shield, Award, Clock, MapPin, Target, Calendar } from 'lucide-react';
 import Navbar from '../components/Navbar';
 
-const ARMY_CLASSES = {
-  'british-gurkha': {
-    flag: '🇬🇧', title: 'British Gurkha Army', subtitle: 'Most Prestigious Selection',
-    badge: 'Once a Year', badgeColor: '#c9a84c', color: 'var(--primary)',
-    img: 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&q=80&w=1200',
-    desc: "The Brigade of Gurkhas is a unique organization in the British Army. Gurkhas are known for their exceptional courage, loyalty, and resilience. Joining the British Gurkha Army is highly competitive, requiring peak physical fitness and mental fortitude.",
-    eligibility: [
-      'Nepalese youth from all parts of Nepal',
-      'Except Kathmandu, Bhaktapur, and Lalitpur districts',
-      'All castes eligible',
-      'Minimum Height: 158cm',
-      'BMI: 17.0 - 24.0',
-      'Education: Minimum SEE with C grade in English & Math'
-    ],
-    selection: [
-      { step: 'Phase 1: Registration', desc: 'Initial documentation check and basic physical screening at regional centers.' },
-      { step: 'Phase 2: Regional Selection', desc: 'Held in Pokhara and Dharan. Includes English tests, math tests, and initial physicals (Heaving, Sit-ups, 800m run).' },
-      { step: 'Phase 3: Central Selection', desc: 'The ultimate test in Pokhara camp. Includes the infamous Doko Race (5.8km carrying 25kg uphill), medicals, and interviews.' }
-    ]
-  },
-  'singapore-police': {
-    flag: '🇸🇬', title: 'Singapore Police Force', subtitle: 'Gurkha Contingent',
-    badge: 'Once a Year', badgeColor: '#c9a84c', color: '#e74c3c',
-    img: 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80&w=1200',
-    desc: "The Gurkha Contingent (GC) is a line department of the Singapore Police Force consisting primarily of Gurkhas from Nepal. They are a highly trained elite unit serving as a special guard force and counter-terrorist force.",
-    eligibility: [
-      'Nepalese youth from all parts of Nepal',
-      'Except Kathmandu Valley districts',
-      'All castes eligible',
-      'Minimum Height: 160cm',
-      'BMI: 18.0 - 25.0',
-      'Education: Minimum SEE with C grade in English & Math'
-    ],
-    selection: [
-      { step: 'Phase 1: Registration', desc: 'Initial documentation check at regional centers.' },
-      { step: 'Phase 2: Regional Selection', desc: 'Held in Pokhara and Dharan. Includes physical fitness tests, written tests.' },
-      { step: 'Phase 3: Central Selection', desc: 'Final grueling physicals, comprehensive medical examination, and final interview in Pokhara.' }
-    ]
-  },
-  'indian-gorkha': {
-    flag: '🇮🇳', title: 'Indian Gorkha Army', subtitle: 'Six Gorkha Regiments',
-    badge: '1-2 Times/Year', badgeColor: '#3d5a3e', color: '#ff9800',
-    img: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=1200',
-    desc: "Since the independence of India in 1947, six Gurkha regiments have been part of the Indian Army. They have a proud history of valor and serve across various terrains and roles within the Indian military.",
-    eligibility: [
-      'Nepalese youth from all parts of Nepal',
-      'All castes eligible EXCEPT Chaudhary caste',
-      'Minimum Height: 157cm',
-      'BMI: Proportionate to height and age',
-      'Education: Minimum 8th/10th pass depending on the trade applied for'
-    ],
-    selection: [
-      { step: 'Phase 1: Rally/Registration', desc: 'Open recruitment rallies held at various regional camps.' },
-      { step: 'Phase 2: Physical Test', desc: '1.6km run, pull-ups, 9 feet ditch jump, zig-zag balance.' },
-      { step: 'Phase 3: Medical & Written', desc: 'Detailed medical examination followed by a Common Entrance Examination (CEE).' }
-    ]
-  }
-};
+import { useContent } from '../hooks/useQueries';
 
 const ClassDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { data: content = {} } = useContent();
+
+  const parseSelection = (selectionStr) => {
+    if (!selectionStr) return [];
+    return selectionStr.split('\n').filter(Boolean).map(line => {
+      const parts = line.split('|');
+      return { step: parts[0]?.trim() || '', desc: parts[1]?.trim() || '' };
+    });
+  };
+
+  const ARMY_CLASSES = {
+    'british-gurkha': {
+      flag: '🇬🇧', title: content.class_1_title || 'British Gurkha Army', subtitle: content.class_1_subtitle || 'Most Prestigious Selection',
+      badge: content.class_1_badge || 'Once a Year', badgeColor: '#c9a84c', color: 'var(--primary)',
+      img: content.class_1_img || 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&q=80&w=1200',
+      desc: content.class_1_desc || "The Brigade of Gurkhas is a unique organization in the British Army. Gurkhas are known for their exceptional courage, loyalty, and resilience. Joining the British Gurkha Army is highly competitive, requiring peak physical fitness and mental fortitude.",
+      eligibility: (content.class_1_eligibility || 'Nepalese youth from all parts of Nepal\nExcept Kathmandu, Bhaktapur, and Lalitpur districts\nAll castes eligible\nMinimum Height: 158cm\nBMI: 17.0 - 24.0\nEducation: Minimum SEE with C grade in English & Math').split('\n').filter(Boolean),
+      selection: parseSelection(content.class_1_selection || 'Phase 1: Registration | Initial documentation check and basic physical screening at regional centers.\nPhase 2: Regional Selection | Held in Pokhara and Dharan. Includes English tests, math tests, and initial physicals (Heaving, Sit-ups, 800m run).\nPhase 3: Central Selection | The ultimate test in Pokhara camp. Includes the infamous Doko Race (5.8km carrying 25kg uphill), medicals, and interviews.')
+    },
+    'singapore-police': {
+      flag: '🇸🇬', title: content.class_2_title || 'Singapore Police Force', subtitle: content.class_2_subtitle || 'Gurkha Contingent',
+      badge: content.class_2_badge || 'Once a Year', badgeColor: '#c9a84c', color: '#e74c3c',
+      img: content.class_2_img || 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80&w=1200',
+      desc: content.class_2_desc || "The Gurkha Contingent (GC) is a line department of the Singapore Police Force consisting primarily of Gurkhas from Nepal. They are a highly trained elite unit serving as a special guard force and counter-terrorist force.",
+      eligibility: (content.class_2_eligibility || 'Nepalese youth from all parts of Nepal\nExcept Kathmandu Valley districts\nAll castes eligible\nMinimum Height: 160cm\nBMI: 18.0 - 25.0\nEducation: Minimum SEE with C grade in English & Math').split('\n').filter(Boolean),
+      selection: parseSelection(content.class_2_selection || 'Phase 1: Registration | Initial documentation check at regional centers.\nPhase 2: Regional Selection | Held in Pokhara and Dharan. Includes physical fitness tests, written tests.\nPhase 3: Central Selection | Final grueling physicals, comprehensive medical examination, and final interview in Pokhara.')
+    },
+    'indian-gorkha': {
+      flag: '🇮🇳', title: content.class_3_title || 'Indian Gorkha Army', subtitle: content.class_3_subtitle || 'Six Gorkha Regiments',
+      badge: content.class_3_badge || '1-2 Times/Year', badgeColor: '#3d5a3e', color: '#ff9800',
+      img: content.class_3_img || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=1200',
+      desc: content.class_3_desc || "Since the independence of India in 1947, six Gurkha regiments have been part of the Indian Army. They have a proud history of valor and serve across various terrains and roles within the Indian military.",
+      eligibility: (content.class_3_eligibility || 'Nepalese youth from all parts of Nepal\nAll castes eligible EXCEPT Chaudhary caste\nMinimum Height: 157cm\nBMI: Proportionate to height and age\nEducation: Minimum 8th/10th pass depending on the trade applied for').split('\n').filter(Boolean),
+      selection: parseSelection(content.class_3_selection || 'Phase 1: Rally/Registration | Open recruitment rallies held at various regional camps.\nPhase 2: Physical Test | 1.6km run, pull-ups, 9 feet ditch jump, zig-zag balance.\nPhase 3: Medical & Written | Detailed medical examination followed by a Common Entrance Examination (CEE).')
+    }
+  };
+
   const program = ARMY_CLASSES[id];
 
   useEffect(() => {

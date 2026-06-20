@@ -1,17 +1,20 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, ExternalLink } from 'lucide-react';
+import { useContent } from '../hooks/useQueries';
 
-const Chatbot = ({ phone = '' }) => {
+const Chatbot = () => {
+  const { data: content = {} } = useContent();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { sender: 'bot', text: 'Hi there! 👋 Welcome to German Bakery. How can I assist you today?' }
+    { sender: 'bot', text: 'Hi there! 👋 Welcome to British Gurkha. How can I assist you today?' }
   ]);
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef(null);
 
   // Clean the phone number for WhatsApp link formatting
-  const cleanPhone = phone ? phone.replace(/\D/g, '') : '15559876543';
+  const dynamicPhone = content.contact_phone || '9803402460';
+  const cleanPhone = dynamicPhone ? dynamicPhone.replace(/\D/g, '') : '9803402460';
   const waLink = `https://wa.me/${cleanPhone}`;
 
   const scrollToBottom = () => {
@@ -78,7 +81,7 @@ const Chatbot = ({ phone = '' }) => {
             <div style={{ background: accentColor, color: 'white', padding: '1.2rem 1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem' }}>
                 <div style={{ width: '10px', height: '10px', background: '#22c55e', borderRadius: '50%', boxShadow: '0 0 8px #22c55e' }}></div>
-                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600, color: 'white' }}>Bakery Assistant</h3>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', fontWeight: 600, color: 'white' }}>BGTC Assistant</h3>
               </div>
               <button
                 onClick={() => setIsOpen(false)}

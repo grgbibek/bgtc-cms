@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Shield } from 'lucide-react';
+import { useContent } from '../hooks/useQueries';
 
 const Navbar = () => {
+  const { data: content = {} } = useContent();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
@@ -16,11 +18,11 @@ const Navbar = () => {
   const closeMenu = () => setMenuOpen(false);
 
   const navItems = [
-    { to: '/',         label: 'Home',     end: true },
-    { to: '/about',    label: 'About Us', end: true },
-    { to: '/gallery',  label: 'Gallery',  end: true },
-    { to: '/classes',  label: 'Classes',  end: true },
-    { to: '/contact',  label: 'Contact',  end: true },
+    { to: '/', label: 'Home', end: true },
+    { to: '/about', label: 'About Us', end: true },
+    { to: '/gallery', label: 'Gallery', end: true },
+    { to: '/classes', label: 'Classes', end: true },
+    { to: '/contact', label: 'Contact', end: true },
   ];
 
   return (
@@ -33,12 +35,16 @@ const Navbar = () => {
           transition={{ duration: 0.5 }}
         >
           <Link to="/" className="logo" onClick={closeMenu}>
-            <div className="logo-emblem">
-              <Shield size={20} strokeWidth={2.5} />
-            </div>
+            {content.site_logo ? (
+              <img src={content.site_logo} alt={content.site_name || 'BGTC'} style={{ paddingTop: '0.5rem', height: '4.5rem', objectFit: 'contain', marginRight: '0.5rem' }} />
+            ) : (
+              <div className="logo-emblem">
+                <Shield size={20} strokeWidth={2.5} />
+              </div>
+            )}
             <div>
-              <span className="logo-text-main">BGTC</span>
-              <span className="logo-text-sub">British Gurkha Training Centre</span>
+              <span className="logo-text-main">{content.site_name || 'BGTC'}</span>
+              <span className="logo-text-sub">{content.site_tagline || 'British Gurkha Training Centre'}</span>
             </div>
           </Link>
         </motion.div>

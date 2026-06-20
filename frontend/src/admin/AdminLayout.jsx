@@ -78,16 +78,18 @@ const AdminLayout = () => {
             <Tags size={20} style={{ flexShrink: 0 }} />
             <span className="link-text">Categories</span>
           </Link>
+          {['admin', 'super_admin', 'manager'].includes(userRole) && (
+            <Link
+              to="/admin/content"
+              className={`sidebar-link ${location.pathname === '/admin/content' ? 'active' : ''}`}
+              onClick={closeSidebar}
+            >
+              <FileText size={20} style={{ flexShrink: 0 }} />
+              <span className="link-text">Text Content</span>
+            </Link>
+          )}
           {['admin', 'super_admin'].includes(userRole) && (
             <>
-              <Link
-                to="/admin/content"
-                className={`sidebar-link ${location.pathname === '/admin/content' ? 'active' : ''}`}
-                onClick={closeSidebar}
-              >
-                <FileText size={20} style={{ flexShrink: 0 }} />
-                <span className="link-text">Text Content</span>
-              </Link>
               <Link
                 to="/admin/settings"
                 className={`sidebar-link ${location.pathname === '/admin/settings' ? 'active' : ''}`}
