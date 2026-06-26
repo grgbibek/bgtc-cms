@@ -30,30 +30,30 @@ const AdminLogin = () => {
             <Lock size={28} />
           </div>
           <h2 style={{ fontFamily: 'Playfair Display', color: 'var(--secondary)' }}>Admin Login</h2>
-          <p style={{ color: 'var(--text-muted)' }}>Sign in to manage your bakery</p>
+          <p style={{ color: 'var(--text-muted)' }}>Sign in to manage your BGTC</p>
         </div>
-        
+
         {error && <div style={{ padding: '0.8rem', background: '#fdeaea', color: '#dc2626', borderRadius: '8px', marginBottom: '1.5rem', textAlign: 'center' }}>{error}</div>}
 
         <form onSubmit={handleLogin}>
           <div className="form-group">
             <label>Username</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              value={username} 
-              onChange={(e) => setUsername(e.target.value)} 
-              required 
+            <input
+              type="text"
+              className="form-control"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
             />
           </div>
           <div className="form-group">
             <label>Password</label>
-            <input 
-              type="password" 
-              className="form-control" 
-              value={password} 
-              onChange={(e) => setPassword(e.target.value)} 
-              required 
+            <input
+              type="password"
+              className="form-control"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <button type="submit" className="btn-primary" style={{ width: '100%', justifyContent: 'center', marginTop: '1rem' }}>

@@ -47,16 +47,57 @@ app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 
 // Static folder (for uploads) — allow cross-origin image loading from the frontend
-app.use('/uploads', (req, res, next) => {
-  res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
-  next();
-}, express.static(path.join(__dirname, 'uploads')));
+// Mount at both paths:
+//   /api/uploads → production (Passenger passes full /api/... path to Express)
+//   /uploads     → local dev (Vite proxy /uploads → localhost:5000/uploads)
+const uploadsMiddleware = [
+  (req, res, next) => {
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    next();
+  },
+  express.static(path.join(__dirname, 'uploads'))
+];
+app.use('/api/uploads', ...uploadsMiddleware);
+app.use('/uploads', ...uploadsMiddleware);
 
 // Serve public static files (if any)
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Swagger Docs Route
 app.use('/api/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Middleware to automatically prefix image URLs with /api in production for all JSON responses
+app.use((req, res, next) => {
+  const originalJson = res.json;
+  const prefix = process.env.NODE_ENV === 'production' ? '/api' : '';
+
+  const formatImageUrls = (obj) => {
+    if (obj === null || obj === undefined) return obj;
+    if (typeof obj === 'string') {
+      if (obj.startsWith('/uploads/')) return `${prefix}${obj}`;
+      return obj;
+    }
+    if (Array.isArray(obj)) {
+      return obj.map(formatImageUrls);
+    }
+    if (typeof obj === 'object' && obj.constructor === Object) {
+      const newObj = {};
+      for (const key in obj) {
+        newObj[key] = formatImageUrls(obj[key]);
+      }
+      return newObj;
+    }
+    return obj;
+  };
+
+  res.json = function (data) {
+    if (prefix) {
+      data = formatImageUrls(data);
+    }
+    return originalJson.call(this, data);
+  };
+  next();
+});
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -71,7 +112,7 @@ app.use('/api/upload', uploadRoutes);
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
-    message: 'Bakery CMS API is running',
+    message: 'BGTC CMS API is running',
     environment: process.env.NODE_ENV || 'development'
   });
 });

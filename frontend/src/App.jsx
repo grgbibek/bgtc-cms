@@ -2,22 +2,22 @@ import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // ─── Lazy-loaded public pages ─────────────────────────────────────────────────
-const Home          = lazy(() => import('./pages/Home'));
-const About         = lazy(() => import('./pages/About'));
-const Gallery       = lazy(() => import('./pages/Gallery'));
-const Classes       = lazy(() => import('./pages/Classes'));
-const ClassDetail   = lazy(() => import('./pages/ProductDetail')); // reused file
-const Facilities    = lazy(() => import('./pages/Facilities'));
-const Contact       = lazy(() => import('./pages/Contact'));
+const Home = lazy(() => import('./pages/Home'));
+const About = lazy(() => import('./pages/About'));
+const Gallery = lazy(() => import('./pages/Gallery'));
+const Classes = lazy(() => import('./pages/Classes'));
+const ClassDetail = lazy(() => import('./pages/ProductDetail')); // reused file
+const Facilities = lazy(() => import('./pages/Facilities'));
+const Contact = lazy(() => import('./pages/Contact'));
 
 // ─── Lazy-loaded admin pages ──────────────────────────────────────────────────
-const AdminLogin       = lazy(() => import('./admin/AdminLogin'));
-const AdminLayout      = lazy(() => import('./admin/AdminLayout'));
-const AdminProducts    = lazy(() => import('./admin/AdminProducts'));
-const AdminCategories  = lazy(() => import('./admin/AdminCategories'));
-const AdminUsers       = lazy(() => import('./admin/AdminUsers'));
-const AdminSettings    = lazy(() => import('./admin/AdminSettings'));
-const AdminContent     = lazy(() => import('./admin/AdminContent'));
+const AdminLogin = lazy(() => import('./admin/AdminLogin'));
+const AdminLayout = lazy(() => import('./admin/AdminLayout'));
+const AdminProducts = lazy(() => import('./admin/AdminProducts'));
+const AdminCategories = lazy(() => import('./admin/AdminCategories'));
+const AdminUsers = lazy(() => import('./admin/AdminUsers'));
+const AdminSettings = lazy(() => import('./admin/AdminSettings'));
+const AdminContent = lazy(() => import('./admin/AdminContent'));
 
 // ─── Loading fallback ─────────────────────────────────────────────────────────
 const PageLoader = () => (
@@ -83,29 +83,29 @@ function App() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           {/* Public */}
-          <Route path="/"              element={<Home />} />
-          <Route path="/about"         element={<About />} />
-          <Route path="/gallery"       element={<Gallery />} />
-          <Route path="/classes"       element={<Classes />} />
-          <Route path="/classes/:id"   element={<ClassDetail />} />
-          <Route path="/product/:id"   element={<Navigate to="/classes" replace />} /> {/* Redirect old bakery route */}
-          <Route path="/products"      element={<Navigate to="/classes" replace />} /> {/* Redirect old bakery route */}
-          <Route path="/facilities"    element={<Facilities />} />
-          <Route path="/services"      element={<Navigate to="/facilities" replace />} /> {/* Redirect old bakery route */}
-          <Route path="/contact"       element={<Contact />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/classes" element={<Classes />} />
+          <Route path="/classes/:id" element={<ClassDetail />} />
+          <Route path="/product/:id" element={<Navigate to="/classes" replace />} /> {/* Redirect old bgtc route */}
+          <Route path="/products" element={<Navigate to="/classes" replace />} /> {/* Redirect old bgtc route */}
+          <Route path="/facilities" element={<Facilities />} />
+          <Route path="/services" element={<Navigate to="/facilities" replace />} /> {/* Redirect old bgtc route */}
+          <Route path="/contact" element={<Contact />} />
 
           {/* Admin */}
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={
             <ProtectedRoute><AdminLayout /></ProtectedRoute>
           }>
-            <Route index                element={<AdminProducts />} />
-            <Route path="classes"       element={<AdminProducts />} />
-            <Route path="products"      element={<Navigate to="/admin/classes" replace />} />
-            <Route path="categories"    element={<AdminCategories />} />
-            <Route path="users"         element={<AdminOnlyRoute><AdminUsers /></AdminOnlyRoute>} />
-            <Route path="settings"      element={<AdminOnlyRoute><AdminSettings /></AdminOnlyRoute>} />
-            <Route path="content"       element={<ManagerOrAdminRoute><AdminContent /></ManagerOrAdminRoute>} />
+            <Route index element={<AdminProducts />} />
+            <Route path="classes" element={<AdminProducts />} />
+            <Route path="products" element={<Navigate to="/admin/classes" replace />} />
+            <Route path="categories" element={<AdminCategories />} />
+            <Route path="users" element={<AdminOnlyRoute><AdminUsers /></AdminOnlyRoute>} />
+            <Route path="settings" element={<AdminOnlyRoute><AdminSettings /></AdminOnlyRoute>} />
+            <Route path="content" element={<ManagerOrAdminRoute><AdminContent /></ManagerOrAdminRoute>} />
           </Route>
         </Routes>
       </Suspense>

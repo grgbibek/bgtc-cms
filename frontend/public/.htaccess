@@ -3,6 +3,9 @@
   RewriteBase /
   RewriteRule ^index\.html$ - [L]
   
+  # Rewrite relative uploads requests to the api uploads route
+  RewriteRule ^uploads/(.*)$ /api/uploads/$1 [L,NC]
+  
   # Ignore the /api directory so it can be handled by the Node.js selector
   RewriteCond %{REQUEST_URI} ^/api [NC]
   RewriteRule .* - [L]

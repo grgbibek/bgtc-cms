@@ -5,9 +5,9 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Bakery CMS API',
+      title: 'BGTC CMS API',
       version: '1.0.0',
-      description: 'API Documentation for Bakery CMS',
+      description: 'API Documentation for BGTC CMS',
     },
     servers: [
       {

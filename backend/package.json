@@ -1,7 +1,7 @@
 {
-  "name": "bakery-cms-backend",
+  "name": "bgtc-cms-backend",
   "version": "1.0.0",
-  "description": "Backend API for Bakery CMS",
+  "description": "Backend API for BGTC CMS",
   "main": "server.js",
   "type": "module",
   "scripts": {

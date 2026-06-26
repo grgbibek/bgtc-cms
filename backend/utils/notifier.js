@@ -51,7 +51,7 @@ const sendEmail = async (to, subject, html) => {
 
   try {
     await transporter.sendMail({
-      from: `"Bakery Nepal 🧁" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
+      from: `"British Gurkha Training Centre" <${process.env.SMTP_FROM || process.env.SMTP_USER}>`,
       to,
       subject,
       html
@@ -163,7 +163,7 @@ export const sendOrderConfirmationToCustomer = async (order) => {
 
 export const sendOrderCancellationToCustomer = async (order, notes) => {
   const noteHtml = notes
-    ? `<div style="background:#fff5f5;border-left:4px solid #fca5a5;padding:12px 16px;border-radius:4px;margin:16px 0;font-style:italic;color:#666;">📝 Note from bakery: ${notes}</div>`
+    ? `<div style="background:#fff5f5;border-left:4px solid #fca5a5;padding:12px 16px;border-radius:4px;margin:16px 0;font-style:italic;color:#666;">📝 Note from bgtc: ${notes}</div>`
     : '';
 
   const html = `<!DOCTYPE html>

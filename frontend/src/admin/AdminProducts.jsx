@@ -60,7 +60,7 @@ const AdminProducts = () => {
       if (validFiles.length < files.length) {
         showNotification('Some files were too large (max 10MB) and skipped.');
       }
-      
+
       const readers = validFiles.map(file => {
         return new Promise((resolve) => {
           const reader = new FileReader();
@@ -135,19 +135,19 @@ const AdminProducts = () => {
 
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="admin-container">
-      
+
       {/* Header Area */}
       <div className="admin-header" style={{ marginBottom: '2rem' }}>
         <div>
           <h1>Product Inventory</h1>
-          <p style={{ color: 'var(--text-muted)' }}>Manage your bakery's offerings</p>
+          <p style={{ color: 'var(--text-muted)' }}>Manage your BGTC's offerings</p>
         </div>
       </div>
 
       {notification && (
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }} 
-          animate={{ opacity: 1, y: 0 }} 
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           style={{ padding: '1rem', background: '#dcfce7', color: '#166534', borderRadius: '8px', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
         >
@@ -158,9 +158,9 @@ const AdminProducts = () => {
 
       <AnimatePresence>
         {isFormOpen && (
-          <motion.div 
-            initial={{ height: 0, opacity: 0 }} 
-            animate={{ height: 'auto', opacity: 1 }} 
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             style={{ overflow: 'hidden', marginBottom: '2rem' }}
           >
@@ -168,7 +168,7 @@ const AdminProducts = () => {
               <h3 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                 {editingId ? 'Edit Product Configuration' : 'New Product Registration'}
               </h3>
-              
+
               <form onSubmit={handleSubmit}>
                 <div className="form-grid-2">
                   <div className="form-group">
@@ -185,7 +185,7 @@ const AdminProducts = () => {
                     </select>
                   </div>
                 </div>
-                
+
                 <div className="form-grid-2-1">
                   <div className="form-group">
                     <label>Product Images (First image will be the main thumbnail)</label>
@@ -203,8 +203,8 @@ const AdminProducts = () => {
                           {formData.images.map((img, idx) => (
                             <div key={idx} style={{ position: 'relative', width: '60px', height: '60px', borderRadius: '8px', border: idx === 0 ? '2px solid var(--primary)' : '1px solid #ddd', overflow: 'hidden' }}>
                               <img src={img.startsWith('data:') || img.startsWith('http') ? img : `${import.meta.env.VITE_API_BASE_URL || ''}${img}`} alt={`Preview ${idx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              <button 
-                                type="button" 
+                              <button
+                                type="button"
                                 onClick={() => removeImage(idx)}
                                 style={{ position: 'absolute', top: 0, right: 0, background: 'rgba(255,0,0,0.8)', color: 'white', border: 'none', cursor: 'pointer', padding: '2px', borderRadius: '0 0 0 4px' }}
                               >
@@ -219,12 +219,12 @@ const AdminProducts = () => {
                   </div>
 
                 </div>
-                
+
                 <div className="form-group">
                   <label>Description</label>
                   <textarea name="description" value={formData.description} onChange={handleInputChange} className="form-control" rows="3" placeholder="A rich, flavorful desc..." required></textarea>
                 </div>
-                
+
                 <div className="form-action" style={{ borderTop: '1px solid #eee', paddingTop: '1.5rem' }}>
                   <button type="submit" className="btn-primary" style={{ flex: 1, justifyContent: 'center' }}>
                     {editingId ? 'Save Changes' : 'Publish Product'}
@@ -241,18 +241,18 @@ const AdminProducts = () => {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
           <h3 style={{ margin: 0 }}>Inventory List ({products.length})</h3>
           {true && (
-            <motion.button 
-              whileHover={{ scale: 1.05 }} 
+            <motion.button
+              whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="btn-primary" 
+              className="btn-primary"
               style={{ padding: '0.6rem 1.2rem', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
               onClick={() => { handleCancel(); setIsFormOpen(!isFormOpen); }}
             >
-              {isFormOpen ? <><X size={16}/> Close Panel</> : <><Plus size={16}/> Add Product</>}
+              {isFormOpen ? <><X size={16} /> Close Panel</> : <><Plus size={16} /> Add Product</>}
             </motion.button>
           )}
         </div>
-        
+
         {products.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
             <Package size={48} style={{ opacity: 0.2, marginBottom: '1rem', margin: '0 auto' }} />
@@ -273,7 +273,7 @@ const AdminProducts = () => {
               <tbody>
                 <AnimatePresence>
                   {products.map((product, index) => (
-                    <motion.tr 
+                    <motion.tr
                       key={product.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
@@ -284,16 +284,16 @@ const AdminProducts = () => {
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem' }}>
                           <div style={{ width: '56px', height: '56px', borderRadius: '14px', overflow: 'hidden', boxShadow: '0 4px 10px rgba(0,0,0,0.08)', border: '1px solid var(--border-color)', background: '#fcfbfa', flexShrink: 0 }}>
-                            <img 
+                            <img
                               src={
-                                (product.image_thumb || product.image) 
-                                  ? ((product.image_thumb || product.image).startsWith('data:') || (product.image_thumb || product.image).startsWith('http') 
-                                      ? (product.image_thumb || product.image) 
-                                      : `${import.meta.env.VITE_API_BASE_URL || ''}${product.image_thumb || product.image}`) 
+                                (product.image_thumb || product.image)
+                                  ? ((product.image_thumb || product.image).startsWith('data:') || (product.image_thumb || product.image).startsWith('http')
+                                    ? (product.image_thumb || product.image)
+                                    : `${import.meta.env.VITE_API_BASE_URL || ''}${product.image_thumb || product.image}`)
                                   : 'https://via.placeholder.com/200?text=No+Image'
-                              } 
-                              alt={product.name} 
-                              style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                              }
+                              alt={product.name}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             />
                           </div>
                           <span style={{ fontWeight: 600, fontSize: '1rem', color: 'var(--secondary)' }}>{product.name}</span>
@@ -308,12 +308,12 @@ const AdminProducts = () => {
                         {product.description}
                       </td>
 
-                        <td>
-                          <div className="action-btns" style={{ justifyContent: 'flex-end' }}>
-                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" onClick={() => handleEdit(product)} title="Edit"><Edit2 size={16} /></motion.button>
-                            <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon danger" onClick={() => handleDelete(product.id)} title="Delete"><Trash2 size={16} /></motion.button>
-                          </div>
-                        </td>
+                      <td>
+                        <div className="action-btns" style={{ justifyContent: 'flex-end' }}>
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon" onClick={() => handleEdit(product)} title="Edit"><Edit2 size={16} /></motion.button>
+                          <motion.button whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} className="btn-icon danger" onClick={() => handleDelete(product.id)} title="Delete"><Trash2 size={16} /></motion.button>
+                        </div>
+                      </td>
                     </motion.tr>
                   ))}
                 </AnimatePresence>

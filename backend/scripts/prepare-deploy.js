@@ -22,7 +22,9 @@ const include = [
   'database.json',
   'migrations',
   'public',
-  'uploads'
+  'uploads',
+  'seed_db.js',
+  '.htaccess'
 ];
 
 async function prepareDeploy() {

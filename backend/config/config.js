@@ -13,15 +13,15 @@ const config = {
   port: process.env.PORT || 5000,
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   backendUrl: process.env.BACKEND_URL || 'http://localhost:5000',
-  
+
   db: {
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
-    name: process.env.DB_NAME || 'bakery_cms',
+    name: process.env.DB_NAME || 'bgtc_cms',
     connectionLimit: 10
   },
-  
+
   jwt: {
     secret: process.env.JWT_SECRET || 'fallback_secret_not_for_production',
     expire: process.env.JWT_EXPIRE || '30d'

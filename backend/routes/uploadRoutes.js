@@ -53,8 +53,9 @@ router.post('/', protect, managerOrAdmin, upload.single('image'), (req, res) => 
     return res.status(400).json({ message: 'No file uploaded.' });
   }
 
-  const baseUrl = `${req.protocol}://${req.get('host')}`;
-  const url = `${baseUrl}/uploads/content/${req.file.filename}`;
+  // Return the relative path - the global JSON interceptor in server.js 
+  // will automatically prepend the /api prefix in production.
+  const url = `/uploads/content/${req.file.filename}`;
 
   res.json({ url });
 });

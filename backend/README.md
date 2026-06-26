@@ -1,6 +1,6 @@
-# Bakery CMS Backend - Database Management
+# BGTC CMS Backend - Database Management
 
-This directory contains the backend API and database management tools for the Bakery CMS.
+This directory contains the backend API and database management tools for the BGTC CMS.
 
 ## 🗄️ Database Migrations (Schema Changes)
 
