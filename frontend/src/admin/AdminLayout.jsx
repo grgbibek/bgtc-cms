@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { FileText, Package, ArrowLeft, Menu, X, Tags, LayoutDashboard, ChevronLeft, ChevronRight, Users, Settings } from 'lucide-react';
+import { FileText, Package, ArrowLeft, Menu, X, Tags, LayoutDashboard, ChevronLeft, ChevronRight, Users, Settings, Inbox } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const AdminLayout = () => {
@@ -51,9 +51,9 @@ const AdminLayout = () => {
             <h2 className="sidebar-title-expanded" style={{ fontFamily: 'Playfair Display', margin: 0 }}>BGTC<br />CMS Panel</h2>
             <h2 className="sidebar-title-collapsed" style={{ fontFamily: 'Playfair Display', margin: 0, fontSize: '2rem', textAlign: 'center' }}>B</h2>
           </div>
-          <button 
+          <button
             className="desktop-only"
-            onClick={() => setIsCollapsed(!isCollapsed)} 
+            onClick={() => setIsCollapsed(!isCollapsed)}
             style={{ background: 'rgba(255,255,255,0.1)', border: 'none', color: 'white', borderRadius: '50%', minWidth: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', transition: 'all 0.2s', marginTop: '0.2rem' }}
             title={isCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
           >
@@ -64,11 +64,11 @@ const AdminLayout = () => {
         <nav className="sidebar-nav">
           <Link
             to="/admin/products"
-            className={`sidebar-link ${(location.pathname === '/admin/products' || location.pathname === '/admin' || location.pathname === '/admin/') ? 'active' : ''}`}
+            className={`sidebar-link ${(location.pathname === '/admin/products' || location.pathname === '/admin/classes') ? 'active' : ''}`}
             onClick={closeSidebar}
           >
             <Package size={20} style={{ flexShrink: 0 }} />
-            <span className="link-text">Classes / Programs</span>
+            <span className="link-text">Classes</span>
           </Link>
           <Link
             to="/admin/categories"
@@ -85,7 +85,17 @@ const AdminLayout = () => {
               onClick={closeSidebar}
             >
               <FileText size={20} style={{ flexShrink: 0 }} />
-              <span className="link-text">Text Content</span>
+              <span className="link-text">Website Content</span>
+            </Link>
+          )}
+          {['admin', 'super_admin', 'manager'].includes(userRole) && (
+            <Link
+              to="/admin/submissions"
+              className={`sidebar-link ${(location.pathname === '/admin/submissions' || location.pathname === '/admin' || location.pathname === '/admin/') ? 'active' : ''}`}
+              onClick={closeSidebar}
+            >
+              <Inbox size={20} style={{ flexShrink: 0 }} />
+              <span className="link-text">Submissions</span>
             </Link>
           )}
           {['admin', 'super_admin'].includes(userRole) && (

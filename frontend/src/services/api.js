@@ -78,6 +78,11 @@ export const settingService = {
   updateSetting: (key, value) => api.post('/settings/update', { key, value }),
 };
 
-
+export const submissionService = {
+  getSubmissions: (params = {}) => api.get('/contact/submissions', { params }),
+  getSubmission: (id) => api.get(`/contact/submissions/${id}`),
+  updateStatus: (id, status) => api.patch(`/contact/submissions/${id}/status`, { status }),
+  deleteSubmission: (id) => api.delete(`/contact/submissions/${id}`),
+};
 
 export default api;

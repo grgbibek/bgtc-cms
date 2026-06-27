@@ -18,6 +18,7 @@ const AdminCategories = lazy(() => import('./admin/AdminCategories'));
 const AdminUsers = lazy(() => import('./admin/AdminUsers'));
 const AdminSettings = lazy(() => import('./admin/AdminSettings'));
 const AdminContent = lazy(() => import('./admin/AdminContent'));
+const AdminSubmissions = lazy(() => import('./admin/AdminSubmissions'));
 
 // ─── Loading fallback ─────────────────────────────────────────────────────────
 const PageLoader = () => (
@@ -99,13 +100,14 @@ function App() {
           <Route path="/admin" element={
             <ProtectedRoute><AdminLayout /></ProtectedRoute>
           }>
-            <Route index element={<AdminProducts />} />
+            <Route index element={<AdminSubmissions />} />
             <Route path="classes" element={<AdminProducts />} />
             <Route path="products" element={<Navigate to="/admin/classes" replace />} />
             <Route path="categories" element={<AdminCategories />} />
             <Route path="users" element={<AdminOnlyRoute><AdminUsers /></AdminOnlyRoute>} />
             <Route path="settings" element={<AdminOnlyRoute><AdminSettings /></AdminOnlyRoute>} />
             <Route path="content" element={<ManagerOrAdminRoute><AdminContent /></ManagerOrAdminRoute>} />
+            <Route path="submissions" element={<ManagerOrAdminRoute><AdminSubmissions /></ManagerOrAdminRoute>} />
           </Route>
         </Routes>
       </Suspense>
