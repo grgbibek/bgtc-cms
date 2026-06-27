@@ -10,6 +10,26 @@ import Navbar from '../components/Navbar';
 import AnnouncementBanner from '../components/AnnouncementBanner';
 import { useContent } from '../hooks/useQueries';
 
+const FacebookIcon = () => (
+  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z" />
+  </svg>
+);
+
+const InstagramIcon = () => (
+  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+  </svg>
+);
+
+const YoutubeIcon = () => (
+  <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+    <path d="M21.582 6.186a2.72 2.72 0 0 0-1.905-1.916C17.994 3.805 12 3.805 12 3.805s-5.994 0-7.677.465a2.72 2.72 0 0 0-1.905 1.916C1.953 7.877 1.953 12 1.953 12s0 4.123.465 5.814a2.72 2.72 0 0 0 1.905 1.916C5.994 20.195 12 20.195 12 20.195s5.994 0 7.677-.465a2.72 2.72 0 0 0 1.905-1.916C22.047 16.123 22.047 12 22.047 12s0-4.123-.465-5.814zM9.953 15.195V8.805l6.094 3.195-6.094 3.195z"/>
+  </svg>
+);
+
 /* ── Hero background images (fallback) ─────────────────────────────────── */
 const heroVideoBg = 'https://images.unsplash.com/photo-1580694080374-e81a4f694f5e?auto=format&fit=crop&q=80&w=1600';
 // Gurkha/military training photo
@@ -18,6 +38,10 @@ const heroVideoBg = 'https://images.unsplash.com/photo-1580694080374-e81a4f694f5
 const Home = () => {
   const navigate = useNavigate();
   const { data: content = {} } = useContent();
+
+  const socialFacebook = content.social_facebook || 'https://facebook.com';
+  const socialInstagram = content.social_instagram || 'https://instagram.com';
+  const socialYoutube = content.social_youtube || 'https://youtube.com';
 
   const heroTitle = content.hero_title || 'Discipline Today,\nStrength Tomorrow';
   const heroSubtitle = content.hero_subtitle || 'Quality pre-army physical training for youth aspiring to join the British Gurkha Army, Singapore Police Force, Indian Army, and more — guided by Ex-British Army PTIs.';
@@ -478,42 +502,72 @@ const Home = () => {
       </section>
 
       {/* ── 9. CONTACT STRIP ──────────────────────────────────────────── */}
-      <section id="contact" style={{ padding: '6rem 0', background: 'var(--army)' }}>
-        <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '3rem', alignItems: 'center' }}>
+      <section id="contact" style={{ padding: '8rem 0', position: 'relative', overflow: 'hidden' }}>
+        {/* Background abstract elements */}
+        <div style={{ position: 'absolute', inset: 0, background: 'var(--secondary)', zIndex: 0 }}></div>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: '50%', background: 'linear-gradient(135deg, #0d1f2d 0%, #1a3a4a 100%)', zIndex: 0 }}></div>
+        <div style={{ position: 'absolute', right: '-10%', top: '-20%', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(201,168,76,0.15) 0%, transparent 70%)', borderRadius: '50%', zIndex: 0 }}></div>
+        <div style={{ position: 'absolute', left: '-5%', bottom: '-10%', width: '400px', height: '400px', background: 'radial-gradient(circle, rgba(61,90,62,0.4) 0%, transparent 70%)', borderRadius: '50%', zIndex: 0 }}></div>
+        <div style={{ position: 'absolute', inset: 0, opacity: 0.05, backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '40px 40px', zIndex: 0 }}></div>
+
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            style={{ 
+              background: 'rgba(255, 255, 255, 0.03)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '24px', 
+              padding: '4rem', 
+              boxShadow: '0 30px 60px rgba(0,0,0,0.3)',
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '4rem', alignItems: 'center' 
+            }}
+          >
             <div>
-              <div className="section-label" style={{ color: 'rgba(255,255,255,0.6)' }}>
-                <span style={{ background: 'rgba(255,255,255,0.3)' }} />
-                Get In Touch
-                <span style={{ background: 'rgba(255,255,255,0.3)' }} />
-              </div>
-              <h2 style={{ color: 'white', fontSize: '2.8rem', marginBottom: '0.5rem' }}>Ready to Begin?</h2>
-              <p style={{ color: 'rgba(255,255,255,0.7)', lineHeight: 1.7, marginBottom: '2rem' }}>
-                Start your journey to becoming a Gurkha. Contact us today for registration and training schedule information.
+              <div className="section-label" style={{ color: 'var(--primary)', marginBottom: '1rem', letterSpacing: '0.2em' }}>Get In Touch</div>
+              <h2 style={{ color: 'white', fontSize: 'clamp(2rem, 5vw, 3rem)', lineHeight: 1.1, marginBottom: '1.5rem', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase' }}>Ready to <span style={{ color: 'var(--primary)' }}>Begin?</span></h2>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', marginBottom: '2.5rem', fontFamily: 'Inter, sans-serif', lineHeight: 1.8 }}>
+                Start your journey to becoming a Gurkha. Contact us today for registration and training schedule information. We are here to guide you every step of the way.
               </p>
-              <Link to="/contact" className="btn-primary" style={{ background: 'white', color: 'var(--army)', borderColor: 'white' }}>
-                Contact Us <ArrowRight size={16} />
+              <Link to="/contact" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.75rem', background: 'var(--primary)', color: 'var(--secondary)', padding: '1.1rem 2.5rem', borderRadius: '50px', fontWeight: 700, fontSize: '1rem', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', textDecoration: 'none', transition: 'all 0.3s ease', boxShadow: '0 10px 20px rgba(201,168,76,0.3)' }}
+                onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = '0 15px 25px rgba(201,168,76,0.4)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = '0 10px 20px rgba(201,168,76,0.3)'; }}
+              >
+                Contact Us <ArrowRight size={18} />
               </Link>
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
               {[
-                { icon: <MapPin size={20} />, label: 'Address', value: contactAddr },
-                { icon: <Phone size={20} />, label: 'Phone', value: contactPhone },
-                { icon: <Mail size={20} />, label: 'Email', value: contactEmail },
+                { icon: <MapPin size={24} />, label: 'Location', value: contactAddr },
+                { icon: <Phone size={24} />, label: 'Phone', value: contactPhone },
+                { icon: <Mail size={24} />, label: 'Email', value: contactEmail },
               ].map((item, i) => (
-                <div key={i} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start' }}>
-                  <div style={{ background: 'rgba(255,255,255,0.15)', borderRadius: '8px', width: '44px', height: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', flexShrink: 0 }}>
+                <motion.div 
+                  key={i} 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.15 + 0.3, duration: 0.5 }}
+                  viewport={{ once: true }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', padding: '1.5rem', background: 'rgba(0,0,0,0.2)', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)', transition: 'transform 0.3s, background 0.3s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateX(10px)'; e.currentTarget.style.background = 'rgba(0,0,0,0.4)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.background = 'rgba(0,0,0,0.2)'; }}
+                >
+                  <div style={{ background: 'var(--army)', padding: '1.2rem', borderRadius: '14px', color: 'var(--primary)', boxShadow: '0 8px 16px rgba(0,0,0,0.2)' }}>
                     {item.icon}
                   </div>
                   <div>
                     <p style={{ color: 'rgba(255,255,255,0.55)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.08em', fontFamily: 'Rajdhani, sans-serif', fontWeight: 600, margin: 0 }}>{item.label}</p>
                     <p style={{ color: 'white', fontWeight: 600, margin: 0 }}>{item.value}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -565,6 +619,19 @@ const Home = () => {
                 <li><a href="tel:061-431230">061-431230</a></li>
                 <li><a href={`mailto:${contactEmail}`}>{contactEmail}</a></li>
               </ul>
+              
+              <h4 style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Follow Us</h4>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <a href={socialFacebook} target="_blank" rel="noreferrer" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', transition: 'all 0.3s' }} onMouseEnter={e => { e.currentTarget.style.background = '#1877F2'; e.currentTarget.style.transform = 'translateY(-3px)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'none'; }}>
+                  <FacebookIcon />
+                </a>
+                <a href={socialInstagram} target="_blank" rel="noreferrer" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', transition: 'all 0.3s' }} onMouseEnter={e => { e.currentTarget.style.background = '#E1306C'; e.currentTarget.style.transform = 'translateY(-3px)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'none'; }}>
+                  <InstagramIcon />
+                </a>
+                <a href={socialYoutube} target="_blank" rel="noreferrer" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', transition: 'all 0.3s' }} onMouseEnter={e => { e.currentTarget.style.background = '#FF0000'; e.currentTarget.style.transform = 'translateY(-3px)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'none'; }}>
+                  <YoutubeIcon />
+                </a>
+              </div>
             </div>
           </div>
 

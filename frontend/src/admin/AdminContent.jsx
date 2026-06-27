@@ -139,6 +139,9 @@ const pageSections = [
       { key: 'contact_address', label: 'Physical Address', type: 'text', help: 'E.g., Kantipur Marga-15, Pokhara' },
       { key: 'contact_phone', label: 'Phone Number', type: 'text', help: 'Contact number shown on the site.' },
       { key: 'contact_email', label: 'Email Address', type: 'text', help: 'Business email.' },
+      { key: 'social_facebook', label: 'Facebook URL', type: 'text', help: 'Full URL to your Facebook page.' },
+      { key: 'social_instagram', label: 'Instagram URL', type: 'text', help: 'Full URL to your Instagram profile.' },
+      { key: 'social_youtube', label: 'YouTube URL', type: 'text', help: 'Full URL to your YouTube channel.' },
     ]
   },
   {
