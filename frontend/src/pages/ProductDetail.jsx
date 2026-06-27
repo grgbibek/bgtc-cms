@@ -64,44 +64,161 @@ const ClassDetail = () => {
 
   return (
     <div style={{ background: '#f4f5f0', minHeight: '100vh', paddingBottom: '4rem' }}>
+      <style>{`
+        .cd-hero {
+          padding-top: var(--navbar-height);
+          height: 60vh;
+          min-height: 380px;
+          background-image: linear-gradient(to top, #0d1f2d 0%, transparent 80%), url(${program.img});
+          background-size: cover;
+          background-position: center;
+          display: flex;
+          align-items: flex-end;
+          padding-bottom: 3rem;
+          color: white;
+          position: relative;
+        }
+        .cd-grid {
+          display: grid;
+          grid-template-columns: 2fr 1fr;
+          gap: 3rem;
+        }
+        .cd-main-card {
+          background: white;
+          border-radius: 16px;
+          padding: 3rem;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+          margin-bottom: 2rem;
+          border: 1px solid var(--border-color);
+        }
+        .cd-sidebar {
+          background: var(--secondary);
+          color: white;
+          border-radius: 16px;
+          padding: 2.5rem;
+          position: sticky;
+          top: calc(var(--navbar-height) + 2rem);
+          height: fit-content;
+        }
+        .cd-hero-title {
+          font-size: clamp(2rem, 6vw, 4.5rem);
+          margin: 0 0 0.5rem;
+          color: white;
+        }
+        .cd-hero-subtitle {
+          color: rgba(255,255,255,0.7);
+          font-size: 1.2rem;
+          font-family: Rajdhani, sans-serif;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          font-weight: 600;
+        }
+        .cd-section-title {
+          font-size: 1.8rem;
+          margin-bottom: 1rem;
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+        }
+        .cd-selection-item {
+          display: flex;
+          gap: 1.5rem;
+        }
+        .cd-register-btn {
+          width: 100%;
+          justify-content: center;
+          background: ${program.color};
+          border-color: ${program.color};
+        }
+
+        /* ── Tablet ─────────────────────────────────────────── */
+        @media (max-width: 900px) {
+          .cd-grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+          }
+          .cd-sidebar {
+            position: static;
+          }
+        }
+
+        /* ── Mobile ─────────────────────────────────────────── */
+        @media (max-width: 768px) {
+          .cd-hero {
+            height: 50vh;
+            min-height: 300px;
+            padding-bottom: 2rem;
+          }
+          .cd-hero-subtitle {
+            font-size: 0.95rem;
+          }
+          .cd-main-card {
+            padding: 1.5rem;
+            border-radius: 12px;
+          }
+          .cd-sidebar {
+            padding: 1.5rem;
+            border-radius: 12px;
+          }
+          .cd-section-title {
+            font-size: 1.4rem;
+          }
+          .cd-selection-item {
+            gap: 1rem;
+          }
+        }
+
+        /* ── Extra small ─────────────────────────────────────── */
+        @media (max-width: 480px) {
+          .cd-hero {
+            min-height: 260px;
+          }
+          .cd-main-card {
+            padding: 1.25rem;
+          }
+          .cd-sidebar {
+            padding: 1.25rem;
+          }
+          .cd-section-title {
+            font-size: 1.2rem;
+          }
+        }
+      `}</style>
+
       <Navbar />
 
       {/* Hero */}
-      <section style={{
-        paddingTop: 'var(--navbar-height)',
-        height: '60vh', minHeight: '400px',
-        backgroundImage: `linear-gradient(to top, #0d1f2d 0%, transparent 80%), url(${program.img})`,
-        backgroundSize: 'cover', backgroundPosition: 'center',
-        display: 'flex', alignItems: 'flex-end', paddingBottom: '4rem',
-        color: 'white', position: 'relative'
-      }}>
+      <section className="cd-hero">
         <div className="container" style={{ position: 'relative', zIndex: 10, width: '100%' }}>
-          <button onClick={() => navigate('/classes')} style={{ background: 'transparent', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', cursor: 'pointer', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>
+          <button
+            onClick={() => navigate('/classes')}
+            style={{ background: 'transparent', color: 'white', border: 'none', display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.5rem', cursor: 'pointer', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}
+          >
             <ArrowLeft size={18} /> Back to Programs
           </button>
-          
+
           <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
-            <span style={{ fontSize: '2.5rem' }}>{program.flag}</span>
+            <span style={{ fontSize: '2rem' }}>{program.flag}</span>
             <span style={{ background: program.color, color: 'white', padding: '0.3rem 0.8rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
               {program.badge}
             </span>
           </div>
-          
-          <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', margin: '0 0 0.5rem', color: 'white' }}>{program.title}</h1>
-          <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.2rem', fontFamily: 'Rajdhani, sans-serif', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 600 }}>{program.subtitle}</p>
+
+          <h1 className="cd-hero-title">{program.title}</h1>
+          <p className="cd-hero-subtitle">{program.subtitle}</p>
         </div>
       </section>
 
       {/* Content */}
       <section style={{ marginTop: '-2rem', position: 'relative', zIndex: 20 }}>
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '3rem' }}>
-            
+          <div className="cd-grid">
+
             {/* Left Column (Main Info) */}
             <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-              <div style={{ background: 'white', borderRadius: '16px', padding: '3rem', boxShadow: '0 10px 30px rgba(0,0,0,0.05)', marginBottom: '2rem', border: '1px solid var(--border-color)' }}>
-                <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <Shield color={program.color} size={28} /> About the Program
+              <div className="cd-main-card">
+                <h2 className="cd-section-title">
+                  <Shield color={program.color} size={26} /> About the Program
                 </h2>
                 <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, fontSize: '1.05rem', fontFamily: 'Inter, sans-serif' }}>
                   {program.desc}
@@ -109,17 +226,17 @@ const ClassDetail = () => {
 
                 <div className="divider" style={{ background: program.color, margin: '2.5rem 0' }} />
 
-                <h2 style={{ fontSize: '1.8rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <Target color={program.color} size={28} /> Selection Process
+                <h2 className="cd-section-title">
+                  <Target color={program.color} size={26} /> Selection Process
                 </h2>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                   {program.selection.map((sel, idx) => (
-                    <div key={idx} style={{ display: 'flex', gap: '1.5rem' }}>
+                    <div key={idx} className="cd-selection-item">
                       <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(13,31,45,0.05)', border: `2px solid ${program.color}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700, color: 'var(--secondary)', flexShrink: 0, fontFamily: 'Rajdhani, sans-serif' }}>
                         {idx + 1}
                       </div>
                       <div>
-                        <h4 style={{ fontSize: '1.1rem', marginBottom: '0.3rem', fontFamily: 'Rajdhani, sans-serif' }}>{sel.step}</h4>
+                        <h4 style={{ fontSize: '1.05rem', marginBottom: '0.3rem', fontFamily: 'Rajdhani, sans-serif' }}>{sel.step}</h4>
                         <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', fontFamily: 'Inter, sans-serif', lineHeight: 1.6 }}>{sel.desc}</p>
                       </div>
                     </div>
@@ -130,12 +247,12 @@ const ClassDetail = () => {
 
             {/* Right Column (Sidebar) */}
             <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, delay: 0.2 }}>
-              <div style={{ background: 'var(--secondary)', color: 'white', borderRadius: '16px', padding: '2.5rem', position: 'sticky', top: 'calc(var(--navbar-height) + 2rem)' }}>
-                <h3 style={{ color: program.color, fontSize: '1.4rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div className="cd-sidebar">
+                <h3 style={{ color: program.color, fontSize: '1.3rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <CheckCircle size={20} /> Eligibility Criteria
                 </h3>
-                
-                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+
+                <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 2rem 0', display: 'flex', flexDirection: 'column', gap: '0.9rem' }}>
                   {program.eligibility.map((req, idx) => (
                     <li key={idx} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
                       <div style={{ color: program.color, marginTop: '0.2rem' }}>•</div>
@@ -152,7 +269,7 @@ const ClassDetail = () => {
                   <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', margin: 0 }}>{program.badge} recruitment drive.</p>
                 </div>
 
-                <Link to="/contact" className="btn-primary" style={{ width: '100%', justifyContent: 'center', background: program.color, borderColor: program.color }}>
+                <Link to="/contact" className="btn-primary cd-register-btn">
                   Register for Training
                 </Link>
               </div>
