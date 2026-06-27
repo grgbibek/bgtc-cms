@@ -29,6 +29,9 @@ export const useContent = () =>
         return acc;
       }, {});
     },
+    // Content rarely changes — keep fresh for 10 min, cache for 30 min
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
     // Gracefully fall back to empty object — pages handle missing keys with defaults
     placeholderData: {},
   });

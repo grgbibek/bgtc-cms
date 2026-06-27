@@ -190,5 +190,93 @@ export const sendOrderCancellationToCustomer = async (order, notes) => {
   await sendEmail(order.customer_email, `❌ Order #${order.id} Cancelled`, html);
 };
 
+export const sendRegistrationEmailToAdmin = async (registration, adminEmail) => {
+  const recipient = adminEmail || process.env.SMTP_FROM || process.env.SMTP_USER;
+  if (!recipient) return;
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>New Registration</title></head>
+<body style="margin:0;padding:20px;background:#f4f4f8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+    <div style="background:#0d1f2d;padding:36px 28px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:8px;">📝</div>
+      <h1 style="color:#fff;margin:0;font-size:26px;font-weight:800;">New Registration Received</h1>
+    </div>
+    <div style="padding:28px;">
+      <table style="width:100%;border-collapse:collapse;">
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;width:150px;">Full Name:</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;">${registration.name}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">Mobile Number:</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;">${registration.phone}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">Email Address:</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;">${registration.email || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">Gender:</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;">${registration.gender}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">Qualification:</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;">${registration.qualification || 'N/A'}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;">Class of Interest:</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;font-weight:600;color:#c9a84c;">${registration.subject}</td>
+        </tr>
+        <tr>
+          <td style="padding:10px;border-bottom:1px solid #eee;font-weight:bold;vertical-align:top;">Message:</td>
+          <td style="padding:10px;border-bottom:1px solid #eee;white-space:pre-wrap;">${registration.message || 'N/A'}</td>
+        </tr>
+      </table>
+    </div>
+    <div style="background:#f4f5f0;padding:18px 28px;text-align:center;font-size:12px;color:#999;border-top:1px solid #e2e8f0;">
+      British Gurkha Training Centre Management System
+    </div>
+  </div>
+</body>
+</html>`;
+
+  await sendEmail(recipient, `🆕 New Registration: ${registration.name} - ${registration.subject}`, html);
+};
+
+export const sendRegistrationConfirmationToUser = async (registration) => {
+  if (!registration.email) return;
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Registration Confirmed</title></head>
+<body style="margin:0;padding:20px;background:#f4f4f8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);">
+    <div style="background:#3d5a3e;padding:36px 28px;text-align:center;">
+      <div style="font-size:48px;margin-bottom:8px;">🤝</div>
+      <h1 style="color:#fff;margin:0;font-size:26px;font-weight:800;">Registration Received</h1>
+      <p style="color:#e2f0d9;margin:8px 0 0;font-size:15px;">Thank you for choosing BGTC, ${registration.name}!</p>
+    </div>
+    <div style="padding:28px;line-height:1.6;color:#333;">
+      <p>Hello <strong>${registration.name}</strong>,</p>
+      <p>We have successfully received your training registration for <strong>${registration.subject}</strong>.</p>
+      <p>Our team is currently reviewing your details. We will contact you shortly on your mobile number (<strong>${registration.phone}</strong>) or via email to discuss the class schedules, physical training requirements, and next steps for enrollment.</p>
+      <p>If you have any immediate questions, feel free to call us or reply directly to this email.</p>
+      <br>
+      <p style="margin:0;">Best regards,</p>
+      <p style="margin:0;font-weight:bold;color:#3d5a3e;">British Gurkha Training Centre</p>
+    </div>
+    <div style="background:#f4f5f0;padding:18px 28px;text-align:center;font-size:12px;color:#999;border-top:1px solid #e2e8f0;">
+      Kantipur Marga-15, Near Ban Campus, Pokhara | Phone: 061-431230, 9803402460
+    </div>
+  </div>
+</body>
+</html>`;
+
+  await sendEmail(registration.email, `Training Registration Received - British Gurkha Training Centre`, html);
+};
+
+
 
 

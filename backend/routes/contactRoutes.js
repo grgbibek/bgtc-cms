@@ -1,4 +1,6 @@
 import express from 'express';
+import pool from '../config/db.js';
+import { sendRegistrationEmailToAdmin, sendRegistrationConfirmationToUser } from '../utils/notifier.js';
 
 const router = express.Router();
 
@@ -36,10 +38,8 @@ const router = express.Router();
 router.post('/', async (req, res) => {
   try {
     const { name, email, phone, gender, qualification, subject, message } = req.body;
-    
-    // In a real application, you might save this to the DB and/or send an email using nodemailer.
-    // For now, we will log it and return a success response to simulate the email being sent.
-    
+    const registration = { name, email, phone, gender, qualification, subject, message };
+
     console.log('--- NEW REGISTRATION RECEIVED ---');
     console.log(`Name: ${name}`);
     console.log(`Email: ${email}`);
@@ -49,6 +49,28 @@ router.post('/', async (req, res) => {
     console.log(`Program: ${subject}`);
     console.log(`Message: ${message}`);
     console.log('---------------------------------');
+
+    // Fetch dynamic contact_email from settings table
+    let adminEmail = null;
+    try {
+      const [rows] = await pool.query('SELECT setting_value FROM settings WHERE setting_key = "contact_email"');
+      if (rows.length > 0) {
+        // Try parsing JSON or fallback to raw string
+        try {
+          adminEmail = JSON.parse(rows[0].setting_value);
+        } catch {
+          adminEmail = rows[0].setting_value;
+        }
+      }
+    } catch (dbErr) {
+      console.warn('Failed to fetch contact_email from settings, falling back to SMTP environment config:', dbErr.message);
+    }
+
+    // Send notifications via SMTP
+    await sendRegistrationEmailToAdmin(registration, adminEmail);
+    if (email) {
+      await sendRegistrationConfirmationToUser(registration);
+    }
 
     return res.status(200).json({ message: 'Registration submitted successfully. We will contact you soon.' });
   } catch (error) {

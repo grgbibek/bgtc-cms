@@ -99,6 +99,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Cache-Control headers for public read-only endpoints
+// Allows browser + CDN to cache for 5 min; s-maxage for shared caches
+const PUBLIC_CACHE_ROUTES = ['/api/content', '/api/products', '/api/categories', '/api/settings'];
+app.use((req, res, next) => {
+  if (req.method === 'GET' && PUBLIC_CACHE_ROUTES.some(r => req.path.startsWith(r.replace('/api', '')))) {
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300, stale-while-revalidate=60');
+  }
+  next();
+});
+
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);

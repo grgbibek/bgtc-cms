@@ -10,6 +10,7 @@ export const CACHE_KEYS = {
   SETTINGS: 'settings',
   CONTENT: 'content',
   CATEGORIES: 'categories',
+  PRODUCTS: 'products',
 };
 
 export const cacheGet = (key) => cache.get(key);

@@ -1,4 +1,5 @@
 import pool from '../config/db.js';
+import { cacheGet, cacheSet, cacheDel, CACHE_KEYS } from '../utils/cache.js';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -69,6 +70,9 @@ const processImage = async (base64String, productName = 'product') => {
 
 export const getProducts = async (req, res) => {
   try {
+    const cached = cacheGet(CACHE_KEYS.PRODUCTS);
+    if (cached) return res.json(cached);
+
     const [rows] = await pool.query(`
       SELECT p.id, p.name, p.description,
              p.image_url as image, p.image_thumb_url as image_thumb,
@@ -77,6 +81,7 @@ export const getProducts = async (req, res) => {
       LEFT JOIN categories c ON p.category_id = c.id
       ORDER BY p.created_at DESC
     `);
+    cacheSet(CACHE_KEYS.PRODUCTS, rows);
     res.json(rows);
   } catch (error) {
     if (error.code === 'ER_NO_SUCH_TABLE') return res.json([]);
@@ -89,25 +94,29 @@ export const getProductById = async (req, res) => {
     const [rows] = await pool.query(`
       SELECT p.id, p.name, p.description,
              p.image_url as image, p.image_thumb_url as image_thumb,
-             c.name as category, p.created_at
+             c.name as category, p.created_at,
+             GROUP_CONCAT(pi.image_url ORDER BY pi.id SEPARATOR '|||') as extra_images
       FROM products p
       LEFT JOIN categories c ON p.category_id = c.id
+      LEFT JOIN product_images pi ON pi.product_id = p.id
       WHERE p.id = ?
+      GROUP BY p.id
     `, [req.params.id]);
-    
+
     if (rows.length === 0) return res.status(404).json({ message: 'Product not found' });
-    
+
     const product = rows[0];
-    
-    // Fetch additional images
-    const [images] = await pool.query('SELECT image_url FROM product_images WHERE product_id = ?', [req.params.id]);
-    product.images = images.length > 0 ? images.map(img => img.image_url) : [product.image];
-    
-    // Ensure the main image is in the list
+    const extraImages = product.extra_images ? product.extra_images.split('|||') : [];
+    delete product.extra_images;
+
+    product.images = extraImages.length > 0 ? extraImages : [];
+
+    // Ensure the main image is first in the list
     if (product.image && !product.images.includes(product.image)) {
       product.images.unshift(product.image);
     }
-    
+    if (product.images.length === 0) product.images = [product.image];
+
     res.json(product);
   } catch (error) {
     console.error('getProductById error:', error);
@@ -150,6 +159,7 @@ export const createProduct = async (req, res) => {
       }
     }
 
+    cacheDel(CACHE_KEYS.PRODUCTS);
     res.status(201).json({ id: productId, name, description, image: original, image_thumb: thumb, category });
   } catch (error) {
     console.error('createProduct error:', error);
@@ -195,6 +205,7 @@ export const updateProduct = async (req, res) => {
       }
     }
 
+    cacheDel(CACHE_KEYS.PRODUCTS);
     res.json({ id: productId, name, description, image: original, image_thumb: thumb, category });
   } catch (error) {
     console.error('updateProduct error:', error);
@@ -205,6 +216,7 @@ export const updateProduct = async (req, res) => {
 export const deleteProduct = async (req, res) => {
   try {
     await pool.query('DELETE FROM products WHERE id = ?', [req.params.id]);
+    cacheDel(CACHE_KEYS.PRODUCTS);
     res.json({ message: 'Product removed' });
   } catch (error) {
     res.status(500).json({ message: 'Server Error' });

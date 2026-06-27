@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield, Target, Star, Users, Award, ArrowRight, ChevronRight,
@@ -287,7 +287,7 @@ const Home = () => {
                 style={{ cursor: 'pointer' }}
               >
                 <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-                  <img src={cls.img} alt={cls.title} className="product-img" style={{ height: '100%' }} />
+                  <img src={cls.img} alt={cls.title} className="product-img" style={{ height: '100%' }} loading="lazy" decoding="async" />
                   <div className="product-category-badge">{cls.flag} {cls.badge}</div>
                   <div style={{
                     position: 'absolute', inset: 0,
@@ -327,7 +327,14 @@ const Home = () => {
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.25rem' }}>
+          {/* Single wrapper animation — avoids animating 16 individual elements */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1.25rem' }}
+          >
             {[
               'Heaving', 'Sit-ups', 'Push-ups',
               '800m Run', 'Interval Run', 'Fartlek Run',
@@ -337,12 +344,8 @@ const Home = () => {
               'Multi-Beep Test', 'Medicine Ball',
               'Swimming', 'Mid Thai Pool',
             ].map((drill, i) => (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.04 }}
                 style={{
                   background: 'rgba(255,255,255,0.05)',
                   border: '1px solid rgba(201,168,76,0.15)',
@@ -357,9 +360,9 @@ const Home = () => {
               >
                 <span style={{ color: 'var(--primary)', flexShrink: 0 }}>▶</span>
                 {drill}
-              </motion.div>
+              </div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -462,7 +465,7 @@ const Home = () => {
                 transition={{ delay: i * 0.1 }}
               >
                 <div style={{ height: '260px', overflow: 'hidden' }}>
-                  <img src={member.img} alt={member.name} className="team-avatar hover-scale" style={{ height: '260px' }} />
+                  <img src={member.img} alt={member.name} className="team-avatar hover-scale" style={{ height: '260px' }} loading="lazy" decoding="async" />
                 </div>
                 <div className="team-info">
                   <h4 style={{ fontSize: '1.25rem', marginBottom: '0.3rem' }}>{member.name}</h4>
