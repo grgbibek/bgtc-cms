@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, ExternalLink } from 'lucide-react';
+import { MessageCircle, X, Send, ExternalLink, Shield } from 'lucide-react';
 import { useContent } from '../hooks/useQueries';
 
 const Chatbot = () => {
@@ -185,7 +185,7 @@ const Chatbot = () => {
           position: 'relative'
         }}
       >
-        {isOpen ? <X size={30} /> : <span style={{ fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '2px' }}>🪖</span>}
+        {isOpen ? <X size={30} /> : <Shield size={28} fill="currentColor" />}
         {!isOpen && (
           <motion.div
             initial={{ scale: 0 }}
