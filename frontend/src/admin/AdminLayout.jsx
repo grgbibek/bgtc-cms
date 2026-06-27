@@ -62,6 +62,47 @@ const AdminLayout = () => {
         </div>
 
         <nav className="sidebar-nav">
+
+          {['admin', 'super_admin', 'manager'].includes(userRole) && (
+            <Link
+              to="/admin/submissions"
+              className={`sidebar-link ${(location.pathname === '/admin/submissions' || location.pathname === '/admin' || location.pathname === '/admin/') ? 'active' : ''}`}
+              onClick={closeSidebar}
+            >
+              <Inbox size={20} style={{ flexShrink: 0 }} />
+              <span className="link-text">Submissions</span>
+            </Link>
+          )}
+          {['admin', 'super_admin', 'manager'].includes(userRole) && (
+            <Link
+              to="/admin/content"
+              className={`sidebar-link ${location.pathname === '/admin/content' ? 'active' : ''}`}
+              onClick={closeSidebar}
+            >
+              <FileText size={20} style={{ flexShrink: 0 }} />
+              <span className="link-text">Website Content</span>
+            </Link>
+          )}
+          {['admin', 'super_admin'].includes(userRole) && (
+            <>
+              {/* <Link
+                to="/admin/settings"
+                className={`sidebar-link ${location.pathname === '/admin/settings' ? 'active' : ''}`}
+                onClick={closeSidebar}
+              >
+                <Settings size={20} style={{ flexShrink: 0 }} />
+                <span className="link-text">System Settings</span>
+              </Link> */}
+              <Link
+                to="/admin/users"
+                className={`sidebar-link ${location.pathname === '/admin/users' ? 'active' : ''}`}
+                onClick={closeSidebar}
+              >
+                <Users size={20} style={{ flexShrink: 0 }} />
+                <span className="link-text">Users</span>
+              </Link>
+            </>
+          )}
           <Link
             to="/admin/products"
             className={`sidebar-link ${(location.pathname === '/admin/products' || location.pathname === '/admin/classes') ? 'active' : ''}`}
@@ -78,46 +119,6 @@ const AdminLayout = () => {
             <Tags size={20} style={{ flexShrink: 0 }} />
             <span className="link-text">Categories</span>
           </Link>
-          {['admin', 'super_admin', 'manager'].includes(userRole) && (
-            <Link
-              to="/admin/content"
-              className={`sidebar-link ${location.pathname === '/admin/content' ? 'active' : ''}`}
-              onClick={closeSidebar}
-            >
-              <FileText size={20} style={{ flexShrink: 0 }} />
-              <span className="link-text">Website Content</span>
-            </Link>
-          )}
-          {['admin', 'super_admin', 'manager'].includes(userRole) && (
-            <Link
-              to="/admin/submissions"
-              className={`sidebar-link ${(location.pathname === '/admin/submissions' || location.pathname === '/admin' || location.pathname === '/admin/') ? 'active' : ''}`}
-              onClick={closeSidebar}
-            >
-              <Inbox size={20} style={{ flexShrink: 0 }} />
-              <span className="link-text">Submissions</span>
-            </Link>
-          )}
-          {['admin', 'super_admin'].includes(userRole) && (
-            <>
-              <Link
-                to="/admin/settings"
-                className={`sidebar-link ${location.pathname === '/admin/settings' ? 'active' : ''}`}
-                onClick={closeSidebar}
-              >
-                <Settings size={20} style={{ flexShrink: 0 }} />
-                <span className="link-text">System Settings</span>
-              </Link>
-              <Link
-                to="/admin/users"
-                className={`sidebar-link ${location.pathname === '/admin/users' ? 'active' : ''}`}
-                onClick={closeSidebar}
-              >
-                <Users size={20} style={{ flexShrink: 0 }} />
-                <span className="link-text">Users</span>
-              </Link>
-            </>
-          )}
         </nav>
 
         <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

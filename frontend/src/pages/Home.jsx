@@ -64,6 +64,7 @@ const Home = () => {
       subtitle: content.class_1_subtitle || 'Most Prestigious Selection',
       desc: content.class_1_desc || 'Join the elite British Gurkha Regiment. Training covering all physical tests including heaving, 800m, 1.5-mile run, Doko Race (5.8 KM) and more.',
       badge: content.class_1_badge || 'Once a Year', badgeColor: '#c9a84c',
+      successRate: content.success_rate_bga || '80%',
       img: content.class_1_img || 'https://images.unsplash.com/photo-1521295121783-8a321d551ad2?auto=format&fit=crop&q=80&w=800',
       route: '/classes/british-gurkha',
     },
@@ -73,6 +74,7 @@ const Home = () => {
       subtitle: content.class_2_subtitle || 'Gurkha Contingent',
       desc: content.class_2_desc || 'Serve as part of the elite Gurkha Contingent of Singapore Police Force — a specialized counter-terrorist and guard force.',
       badge: content.class_2_badge || 'Once a Year', badgeColor: '#c9a84c',
+      successRate: content.success_rate_spf || '64%',
       img: content.class_2_img || 'https://images.unsplash.com/photo-1547036967-23d11aacaee0?auto=format&fit=crop&q=80&w=800',
       route: '/classes/singapore-police',
     },
@@ -82,6 +84,7 @@ const Home = () => {
       subtitle: content.class_3_subtitle || 'Six Gorkha Regiments',
       desc: content.class_3_desc || 'Join one of the six prestigious Gorkha regiments of the Indian Army, established under the 1947 Tripartite Agreement.',
       badge: content.class_3_badge || '1–2 Times/Year', badgeColor: '#3d5a3e',
+      successRate: content.success_rate_ia || '55%',
       img: content.class_3_img || 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&q=80&w=800',
       route: '/classes/indian-gorkha',
     },
@@ -302,30 +305,93 @@ const Home = () => {
             {ARMY_CLASSES.map((cls, i) => (
               <motion.div
                 key={cls.id}
-                className="product-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.12 }}
+                transition={{ delay: i * 0.12, duration: 0.5 }}
                 onClick={() => navigate(cls.route)}
-                style={{ cursor: 'pointer' }}
+                whileHover="hover"
+                style={{
+                  cursor: 'pointer',
+                  background: 'white',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  boxShadow: '0 10px 30px rgba(0,0,0,0.03)',
+                  border: '1px solid rgba(201,168,76,0.15)',
+                  borderTop: '5px solid var(--primary)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  position: 'relative',
+                  height: '100%',
+                }}
               >
+                {/* Image Container with Badges */}
                 <div style={{ position: 'relative', height: '240px', overflow: 'hidden' }}>
-                  <img src={cls.img} alt={cls.title} className="product-img" style={{ height: '100%' }} loading="lazy" decoding="async" />
-                  <div className="product-category-badge">{cls.flag} {cls.badge}</div>
+                  {/* Success Rate Badge (Top Left) */}
                   <div style={{
-                    position: 'absolute', inset: 0,
-                    background: 'linear-gradient(to top, rgba(13,31,45,0.7) 0%, transparent 60%)',
-                  }} />
+                    position: 'absolute', top: '1rem', left: '1rem',
+                    background: 'rgba(13,31,45,0.9)', backdropFilter: 'blur(8px)',
+                    border: `1px solid ${cls.badgeColor}`, borderRadius: '6px',
+                    padding: '0.4rem 0.8rem', zIndex: 10, display: 'flex', flexDirection: 'column', alignItems: 'center'
+                  }}>
+                    <span style={{ color: cls.badgeColor, fontFamily: 'Rajdhani', fontWeight: 800, fontSize: '1.1rem', lineHeight: 1 }}>{cls.successRate}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.6)', fontSize: '0.55rem', textTransform: 'uppercase', letterSpacing: '0.08em', marginTop: '0.1rem', fontFamily: 'Rajdhani', fontWeight: 700 }}>Success</span>
+                  </div>
+
+                  {/* Program Intake Badge (Top Right) */}
+                  <div style={{
+                    position: 'absolute', top: '1rem', right: '1rem',
+                    background: 'rgba(13,31,45,0.9)', backdropFilter: 'blur(8px)',
+                    border: '1px solid rgba(255,255,255,0.15)', borderRadius: '6px',
+                    padding: '0.4rem 0.8rem', color: 'white', zIndex: 10,
+                    fontFamily: 'Rajdhani', fontSize: '0.72rem', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase'
+                  }}>
+                    {cls.flag} {cls.badge}
+                  </div>
+
+                  <motion.img
+                    src={cls.img}
+                    alt={cls.title}
+                    variants={{
+                      hover: { scale: 1.06 }
+                    }}
+                    transition={{ duration: 0.4 }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top' }}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
-                <div className="product-info">
-                  <p style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>{cls.subtitle}</p>
-                  <h3 className="product-title">{cls.title}</h3>
-                  <p className="product-desc">{cls.desc}</p>
-                  <div className="product-meta">
-                    <span style={{ color: 'var(--primary)', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                      View Details <ArrowRight size={14} />
+
+                {/* Card Info Container */}
+                <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <p style={{ color: 'var(--primary)', fontSize: '0.8rem', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '0.4rem' }}>
+                    {cls.subtitle}
+                  </p>
+                  <h3 style={{ fontSize: '1.4rem', color: 'var(--secondary)', marginBottom: '0.75rem', fontFamily: 'Rajdhani, sans-serif', fontWeight: 700 }}>
+                    {cls.title}
+                  </h3>
+                  <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, marginBottom: '1.5rem', flex: 1, fontFamily: 'Inter, sans-serif' }}>
+                    {cls.desc}
+                  </p>
+
+                  {/* Gold Interactive CTA */}
+                  <div style={{ marginTop: 'auto', paddingTop: '1.25rem', borderTop: '1px solid #f0f0eb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ color: 'var(--secondary)', fontWeight: 700, fontFamily: 'Rajdhani, sans-serif', fontSize: '0.92rem', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                      Explore Program
                     </span>
+                    <motion.div
+                      variants={{
+                        hover: { x: 5, background: 'var(--primary)', color: '#0d1f2d' }
+                      }}
+                      transition={{ duration: 0.2 }}
+                      style={{
+                        width: '36px', height: '36px', borderRadius: '50%',
+                        background: 'rgba(201,168,76,0.15)', color: 'var(--primary)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center'
+                      }}
+                    >
+                      <ArrowRight size={16} />
+                    </motion.div>
                   </div>
                 </div>
               </motion.div>

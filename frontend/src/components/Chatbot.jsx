@@ -58,8 +58,8 @@ const Chatbot = () => {
   };
 
   // Catchy color for the chatbot
-  const accentColor = '#f43f5e'; // Vibrant Rose
-  const glowColor = 'rgba(244, 63, 94, 0.5)';
+  const accentColor = '#3d5a3e'; // Army Green
+  const glowColor = 'rgba(61, 90, 62, 0.5)';
 
   return (
     <div style={{ position: 'fixed', bottom: '1.5rem', right: '1.5rem', zIndex: 9000, display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
@@ -81,7 +81,7 @@ const Chatbot = () => {
               display: 'flex',
               flexDirection: 'column',
               overflow: 'hidden',
-              border: '1px solid rgba(244, 63, 94, 0.1)'
+              border: '1px solid rgba(61, 90, 62, 0.1)'
             }}
           >
             {/* Chatbot Header */}
@@ -139,7 +139,7 @@ const Chatbot = () => {
             </div>
 
             {/* Input Area */}
-            <form onSubmit={handleSend} style={{ borderTop: '1px solid rgba(244, 63, 94, 0.1)', padding: '1.2rem', background: 'white', display: 'flex', gap: '0.8rem' }}>
+            <form onSubmit={handleSend} style={{ borderTop: '1px solid rgba(61, 90, 62, 0.1)', padding: '1.2rem', background: 'white', display: 'flex', gap: '0.8rem' }}>
               <input
                 type="text"
                 value={inputText}
@@ -165,7 +165,7 @@ const Chatbot = () => {
           scale: 1.1,
           boxShadow: [
             `0 0 0 0 ${glowColor}`,
-            `0 0 0 20px rgba(244, 63, 94, 0)`
+            `0 0 0 20px rgba(61, 90, 62, 0)`
           ],
         }}
         transition={{
@@ -185,7 +185,7 @@ const Chatbot = () => {
           position: 'relative'
         }}
       >
-        {isOpen ? <X size={30} /> : <MessageCircle size={30} />}
+        {isOpen ? <X size={30} /> : <span style={{ fontSize: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '2px' }}>🪖</span>}
         {!isOpen && (
           <motion.div
             initial={{ scale: 0 }}
