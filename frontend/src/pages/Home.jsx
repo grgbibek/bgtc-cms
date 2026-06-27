@@ -26,7 +26,7 @@ const InstagramIcon = () => (
 
 const YoutubeIcon = () => (
   <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
-    <path d="M21.582 6.186a2.72 2.72 0 0 0-1.905-1.916C17.994 3.805 12 3.805 12 3.805s-5.994 0-7.677.465a2.72 2.72 0 0 0-1.905 1.916C1.953 7.877 1.953 12 1.953 12s0 4.123.465 5.814a2.72 2.72 0 0 0 1.905 1.916C5.994 20.195 12 20.195 12 20.195s5.994 0 7.677-.465a2.72 2.72 0 0 0 1.905-1.916C22.047 16.123 22.047 12 22.047 12s0-4.123-.465-5.814zM9.953 15.195V8.805l6.094 3.195-6.094 3.195z"/>
+    <path d="M21.582 6.186a2.72 2.72 0 0 0-1.905-1.916C17.994 3.805 12 3.805 12 3.805s-5.994 0-7.677.465a2.72 2.72 0 0 0-1.905 1.916C1.953 7.877 1.953 12 1.953 12s0 4.123.465 5.814a2.72 2.72 0 0 0 1.905 1.916C5.994 20.195 12 20.195 12 20.195s5.994 0 7.677-.465a2.72 2.72 0 0 0 1.905-1.916C22.047 16.123 22.047 12 22.047 12s0-4.123-.465-5.814zM9.953 15.195V8.805l6.094 3.195-6.094 3.195z" />
   </svg>
 );
 
@@ -582,15 +582,15 @@ const Home = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            style={{ 
+            style={{
               background: 'rgba(255, 255, 255, 0.03)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               border: '1px solid rgba(255,255,255,0.1)',
-              borderRadius: '24px', 
-              padding: '4rem', 
+              borderRadius: '24px',
+              padding: '4rem',
               boxShadow: '0 30px 60px rgba(0,0,0,0.3)',
-              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '4rem', alignItems: 'center' 
+              display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '4rem', alignItems: 'center'
             }}
           >
             <div>
@@ -613,8 +613,8 @@ const Home = () => {
                 { icon: <Phone size={24} />, label: 'Phone', value: contactPhone },
                 { icon: <Mail size={24} />, label: 'Email', value: contactEmail },
               ].map((item, i) => (
-                <motion.div 
-                  key={i} 
+                <motion.div
+                  key={i}
                   initial={{ opacity: 0, x: 20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.15 + 0.3, duration: 0.5 }}
@@ -644,13 +644,13 @@ const Home = () => {
             <div className="footer-brand">
               <div className="logo" style={{ marginBottom: '1rem' }}>
                 {content.site_logo ? (
-                  <img src={content.site_logo} alt={content.site_name || 'BGTC'} style={{ paddingTop: '0.5rem', height: '4.5rem', objectFit: 'contain', marginRight: '0.5rem' }} />
+                  <img src={content.site_logo} alt={content.site_name || 'BGTC'} style={{ paddingTop: '0.5rem', height: '10rem', objectFit: 'contain' }} />
                 ) : (
                   <div className="logo-emblem"><Shield size={20} strokeWidth={2.5} /></div>
                 )}
                 <div>
-                  <span className="logo-text-main">{content.site_name || 'BGTC'}</span>
-                  <span className="logo-text-sub">{content.site_tagline || 'British Gurkha Training Centre'}</span>
+                  <span className="logo-text-main" style={{ fontSize: '2rem' }}>{content.site_name || 'BGTC'}</span>
+                  <span className="logo-text-sub" style={{ fontSize: '0.8rem' }}>{content.site_tagline || 'British Gurkha Training Centre'}</span>
                 </div>
               </div>
               <p>Providing quality pre-army physical training since our inception in Pokhara, Nepal. Ranked 2nd best pre-army training centre in Nepal.</p>
@@ -659,7 +659,7 @@ const Home = () => {
             <div className="footer-col">
               <h4>Quick Links</h4>
               <ul>
-                {[['/', 'Home'], ['/about', 'About Us'], ['/gallery', 'Gallery'], ['/classes', 'Classes'], ['/contact', 'Contact']].map(([to, label]) => (
+                {[['/', 'Home'], ['/about', 'About Us'], ['/classes', 'Classes'], ['/contact', 'Contact']].map(([to, label]) => (
                   <li key={to}><Link to={to}>{label}</Link></li>
                 ))}
               </ul>
@@ -685,7 +685,7 @@ const Home = () => {
                 <li><a href="tel:061-431230">061-431230</a></li>
                 <li><a href={`mailto:${contactEmail}`}>{contactEmail}</a></li>
               </ul>
-              
+
               <h4 style={{ marginTop: '2rem', marginBottom: '1rem', fontSize: '0.9rem', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Follow Us</h4>
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <a href={socialFacebook} target="_blank" rel="noreferrer" style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', transition: 'all 0.3s' }} onMouseEnter={e => { e.currentTarget.style.background = '#1877F2'; e.currentTarget.style.transform = 'translateY(-3px)'; }} onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; e.currentTarget.style.transform = 'none'; }}>

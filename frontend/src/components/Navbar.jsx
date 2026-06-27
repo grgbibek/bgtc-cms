@@ -20,7 +20,7 @@ const Navbar = () => {
   const navItems = [
     { to: '/', label: 'Home', end: true },
     { to: '/about', label: 'About Us', end: true },
-    { to: '/gallery', label: 'Gallery', end: true },
+    // { to: '/gallery', label: 'Gallery', end: true },
     { to: '/classes', label: 'Classes', end: true },
     { to: '/contact', label: 'Contact', end: true },
   ];
