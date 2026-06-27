@@ -23,30 +23,38 @@ const AnnouncementBanner = ({ content = {} }) => {
   /* ── Build slide list ──────────────────────────────────────────────── */
   useEffect(() => {
     let parsed = [];
+    const hasContentData = Object.keys(content).length > 0;
 
-    if (content.announcements) {
+    if (hasContentData) {
+      if (content.announcements) {
+        try {
+          const arr = JSON.parse(content.announcements);
+          if (Array.isArray(arr)) {
+            parsed = arr.filter((a) => a.enabled !== false && a.enabled !== 'false');
+          }
+        } catch (_) { /* fall through */ }
+      } else if (content.announcement_enabled === 'true') {
+        // Legacy flat-key fallback
+        parsed = [{
+          title: content.announcement_title || '',
+          text:  content.announcement_text  || '',
+          image: content.announcement_image || '',
+        }];
+      }
+      // Save to local storage for instant load on refresh
+      localStorage.setItem('bgtc_announcements', JSON.stringify(parsed));
+    } else {
+      // If content isn't loaded yet, try to read from cache instantly
       try {
-        const arr = JSON.parse(content.announcements);
-        if (Array.isArray(arr)) {
-          parsed = arr.filter((a) => a.enabled !== false && a.enabled !== 'false');
-        }
-      } catch (_) { /* fall through */ }
+        const cached = localStorage.getItem('bgtc_announcements');
+        if (cached) parsed = JSON.parse(cached);
+      } catch (_) {}
     }
 
-    // Legacy flat-key fallback
-    if (parsed.length === 0 && content.announcement_enabled === 'true') {
-      parsed = [{
-        title: content.announcement_title || '',
-        text:  content.announcement_text  || '',
-        image: content.announcement_image || '',
-      }];
-    }
-
-    const dismissed = sessionStorage.getItem('announcement_dismissed') === 'true';
-    if (parsed.length > 0 && !dismissed) {
+    if (parsed.length > 0) {
       setSlides(parsed);
       setIndex(0);
-      const t = setTimeout(() => setVisible(true), 800);
+      const t = setTimeout(() => setVisible(true), 300); // 300ms for a near-instant popup
       return () => clearTimeout(t);
     }
   }, [content]);
@@ -62,7 +70,6 @@ const AnnouncementBanner = ({ content = {} }) => {
 
   const dismiss = () => {
     setVisible(false);
-    sessionStorage.setItem('announcement_dismissed', 'true');
   };
 
   if (!visible || slides.length === 0) return null;

@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, ExternalLink } from 'lucide-react';
 import { useContent } from '../hooks/useQueries';
 
 const Chatbot = () => {
+  const location = useLocation();
   const { data: content = {} } = useContent();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
@@ -11,6 +13,11 @@ const Chatbot = () => {
   ]);
   const [inputText, setInputText] = useState('');
   const messagesEndRef = useRef(null);
+
+  // Hide on admin routes
+  if (location.pathname.startsWith('/admin')) {
+    return null;
+  }
 
   // Clean the phone number for WhatsApp link formatting
   const dynamicPhone = content.contact_phone || '9803402460';
