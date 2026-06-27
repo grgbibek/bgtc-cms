@@ -22,7 +22,6 @@ const include = [
   'database.json',
   'migrations',
   'public',
-  'uploads',
   'seed_db.js',
   '.htaccess'
 ];
